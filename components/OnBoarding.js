@@ -121,7 +121,7 @@ const OnBoarding = ({ navigation }) => {
                 </View>
             </View>
 
-            <Animated.Text style={[styles.header, { opacity: fadeHeader }]}>Lorem ipsum dolor sit amet.</Animated.Text>
+            <Animated.Text style={[styles.header, { opacity: fadeHeader }]}>FurryHope Mobile.</Animated.Text>
             <Animated.Text style={[styles.subHeader, { opacity: fadeSub }]}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia et rerum voluptate deserunt, aut dolorem!</Animated.Text>
 
             <Animated.View style={{ opacity: fadeBtn }}>
@@ -196,11 +196,12 @@ const styles = StyleSheet.create({
     header: {
         fontFamily: 'PoppinsSemiBold',
         fontSize: 40,
+        lineHeight: 45
     },
 
     subHeader: {
         fontFamily: 'PoppinsExtraLight',
-        fontSize: 16,
+        fontSize: 19,
         marginTop: 10,
     },
 
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,
-        marginTop: 90,
+        marginTop: 80,
     },
 
     getStartedTxt: {

@@ -156,10 +156,10 @@ const App = () => {
     PoppinsBold: require('./assets/Fonts/Poppins-Bold.ttf'),
     PoppinsExtraBold: require('./assets/Fonts/Poppins-ExtraBold.ttf'),
     PoppinsBlack: require('./assets/Fonts/Poppins-Black.ttf'),
-    PlayfairBold: require('./assets/Fonts/PlayFairDisplay-Bold.ttf'),
-    PlayfairSemiBold: require('./assets/Fonts/PlayFairDisplay-SemiBold.ttf'),
-    PlayfairMedium: require('./assets/Fonts/PlayFairDisplay-Medium.ttf'),
-    PlayfairRegular: require('./assets/Fonts/PlayFairDisplay-Regular.ttf'),
+    PlayfairBold: require('./assets/Fonts/PlayfairDisplay-Bold.ttf'),
+    PlayfairSemiBold: require('./assets/Fonts/PlayfairDisplay-SemiBold.ttf'),
+    PlayfairMedium: require('./assets/Fonts/PlayfairDisplay-Medium.ttf'),
+    PlayfairRegular: require('./assets/Fonts/PlayfairDisplay-Regular.ttf'),
   })
 
   if(!loaded) {

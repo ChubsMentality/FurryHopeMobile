@@ -22,7 +22,7 @@ const ViewAnimalDataPending = ({ navigation, route }) => {
 
     const getDataById = async () => {
         try {
-            const { data } = await axios.get(`${URL}api/animals/${animalId}`)
+            const { data } = await axios.get(`http://localhost:5000/api/animals/${animalId}`)
             console.log(data)
             setName(data.name);
             setBreed(data.breed);

@@ -8,7 +8,14 @@ import BottomNav from './SubComponents/BottomNav'
 import EmptyList from '../assets/Images/empty-adoption-list.png'
 import catIllustration from '../assets/Images/catIllustration.png'
 import dogIllustration from '../assets/Images/dogIllustration.png'
+import TopNavAbsolute from './SubComponents/TopNavAbsolute'
 import axios from 'axios'
+import { Video } from 'expo-av'
+import vid1 from '../assets/homeVideo.mp4'
+import vid2 from '../assets/Videos/homeVideo2.mp4'
+import vid3 from '../assets/Videos/homeVideo3.mp4'
+import vid4 from '../assets/Videos/vid4.mp4'
+import avatar from '../assets/Images/avatar-vector.png'
 
 const ViewAnimals = ({ navigation }) => {
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext)
@@ -32,11 +39,14 @@ const ViewAnimals = ({ navigation }) => {
     const [genderList, setGenderList] = useState([])
     const [sizeList, setSizeList] = useState([])
 
+    const vidArr = [vid1, vid2, vid3]
+    const [random, setRandom] = useState(0)
+
     const filterPreferences = async () => {
         let user = {}
 
         try {
-            const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
+            const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
             user = data
         } catch (error) {
             console.log(error)
@@ -45,8 +55,8 @@ const ViewAnimals = ({ navigation }) => {
         if(user && user.animalPreference === 'Dog') {
             console.log('get dogs')
             try {
-                const { data:userData } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
-                const { data:animalData } = await axios.get(`${URL}api/animals/getDogs`)
+                const { data:userData } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+                const { data:animalData } = await axios.get(`http://localhost:5000/api/animals/getDogs`)
                 setAnimalPreferences(userData.animalPreference)
                 setBreedPreference(userData.breedPreferences)
                 setColorPreferences(userData.colorPreferences)
@@ -59,8 +69,8 @@ const ViewAnimals = ({ navigation }) => {
         } else if(user && user.animalPreference === 'Cat') {
             console.log('get cats')
             try {
-                const { data:userData } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
-                const { data:animalData } = await axios.get(`${URL}api/animals/getCats`)
+                const { data:userData } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+                const { data:animalData } = await axios.get(`http://localhost:5000/api/animals/getCats`)
                 setAnimalPreferences(userData.animalPreference)
                 setBreedPreference(userData.breedPreferences)
                 setColorPreferences(userData.colorPreferences)
@@ -73,8 +83,8 @@ const ViewAnimals = ({ navigation }) => {
         } else if(user && user.animalPreference === 'Both') {
             console.log('get both')
             try {
-                const { data:userData } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
-                const { data:animalData } = await axios.get(`${URL}api/animals/getBoth`)
+                const { data:userData } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+                const { data:animalData } = await axios.get(`http://localhost:5000/api/animals/getBoth`)
                 setAnimalPreferences(userData.animalPreference)
                 setBreedPreference(userData.breedPreferences)
                 setColorPreferences(userData.colorPreferences)
@@ -134,7 +144,7 @@ const ViewAnimals = ({ navigation }) => {
 
     const getUser = async () => {
         try {
-            const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
+            const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
             let split = data.fullName.split(' ')
             let firstName = split[0]
             setFName(firstName)
@@ -201,10 +211,23 @@ const ViewAnimals = ({ navigation }) => {
         )
     }
 
+    useEffect(() => {
+        const selectRandom = () => {
+            let iterator = 0
+            let rand = Math.floor(Math.random() * vidArr.length)
+            setRandom(rand)
+            console.log(rand)
+        }
+
+        setTimeout(() => {
+           selectRandom() 
+        }, 60000);
+    }, [random])
+
     return (
         <SafeAreaView style={styles.body}>
             <ScrollView style={styles.flexContainer}>
-                <View style={styles.topNavContainer}>
+                {/* <View style={styles.topNavContainer}>
                     <TopNav ScreenName='Animals' color='#111' />
 
                     <View style={styles.toggleTabContainer}>
@@ -216,13 +239,56 @@ const ViewAnimals = ({ navigation }) => {
                             <Text style={browseActive ? styles.toggleTabTxt : styles.toggleTabTxtActive}>For You</Text>
                         </TouchableOpacity>
                     </View>
+                </View> */}
+
+                <TopNavAbsolute ScreenName='Browse' color='white' />
+                <Video
+                    style={styles.video} 
+                    source={vidArr[random]}
+                    resizeMode='cover'
+                    isLooping={true}
+                    shouldPlay
+                    isMuted
+                />
+
+                <View
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        height: 450,
+                        width: '100%',
+                        backgroundColor: '#111',
+                        opacity: .35,
+                    }}
+                >
                 </View>
+
+{/* top: 270 */}
+                <View style={{ position: 'absolute', top: 320, left: 0, }}> 
+                    <Text style={styles.heading}>Hello {fName}</Text>
+                    <Text style={styles.subHeading}>Make a new friend today</Text>
+                </View>
+
+                <View style={styles.toggleTabContainer}>
+                    <TouchableOpacity style={browseActive ? styles.toggleTabActive : styles.toggleTab} onPress={() => toggleBrowse()}>
+                        <Text style={browseActive ? styles.toggleTabTxtActive : styles.toggleTabTxt}>Browse</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={browseActive ? styles.toggleTab : styles.toggleTabActive} onPress={() => toggleSuggested()}>
+                        <Text style={browseActive ? styles.toggleTabTxt : styles.toggleTabTxtActive}>For You</Text>
+                    </TouchableOpacity>
+                </View>
+
                 <View style={styles.top_margin}></View>
 
                 {browseActive ?
                     <View>
-                        <Text style={styles.heading}>Hello {fName}</Text>
-                        <Text style={styles.subHeading}>Make a new friend today</Text>
+                        <View style={styles.testimonyContainer}>
+                            <Image source={avatar} style={styles.avatar}/>
+                            <Text style={styles.testimonyHeader}>Save lives.</Text>
+                            <Text style={styles.testimonySub}>Adopt one today.</Text>
+                        </View>
 
                         <Text style={styles.categoryHeading}>Choose among our different animals</Text>
                         <TouchableOpacity style={styles.animalCategoryContainer} onPress={() => navigation.navigate('Dogs')}>
@@ -343,6 +409,11 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
 
+    video: {
+        height: 450,
+        width: '100%',
+    },
+
     topNavContainer: {
         shadowColor: '#111',
         shadowOffset: {
@@ -354,27 +425,28 @@ const styles = StyleSheet.create({
     },
 
     toggleTabContainer: {
-        width: '85%',
+        width: '100%',
         flexDirection: 'row',
         // justifyContent: 'space-evenly',
         alignItems: 'center',
-        marginTop: 40,
-        marginRight: 30,
-        marginBottom: 1,
-        marginLeft: 30,
         borderBottomColor: '#111',
+        height: 50,
     },
 
     toggleTab: {
         width: '50%',
-        paddingBottom: 7,
+        height: '100%',
+        backgroundColor: '#FAFAFA',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     toggleTabActive: {
         width: '50%',
-        borderBottomColor: '#111',
-        borderBottomWidth: 2,
-        paddingBottom: 7,
+        height: '100%',
+        backgroundColor: '#111',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
     suggestedLabel: {
@@ -400,11 +472,15 @@ const styles = StyleSheet.create({
 
     toggleTabTxt: {
         textAlign: 'center',
+        fontSize: 18,
+        color: '#A1A1AA',
     },
 
     toggleTabTxtActive: {
         fontFamily: 'PoppinsMedium',
         textAlign: 'center',
+        fontSize: 18,
+        color: 'white'
     },
 
     top_margin: {
@@ -413,15 +489,49 @@ const styles = StyleSheet.create({
 
     heading: {
         fontFamily: 'PoppinsSemiBold',
-        fontSize: 40,
+        fontSize: 50,
         marginLeft: 30,
+        color: 'white',
+        lineHeight: 55,
     },
 
     subHeading: {
-        fontFamily: 'PoppinsLight',
+        fontFamily: 'PoppinsExtraLight',
         fontSize: 21,
-        marginTop: -10,
+        marginTop: 10,
         marginLeft: 30,
+        color: 'white',
+    },
+
+    testimonyContainer: {
+        backgroundColor: '#FFEDD2',
+        height: 140,
+        marginLeft: 30,
+        marginRight: 30,
+        position: 'relative',
+    },
+
+    testimonyHeader: {
+        fontFamily: 'PoppinsBold',
+        fontSize: 30,
+        marginTop: 33,
+        marginLeft: 130,
+    },
+
+    testimonySub: {
+        fontFamily: 'PoppinsLight',
+        fontSize: 20,
+        marginTop: -8,
+        marginLeft: 130,
+    },
+
+    avatar: {
+        height: 85,
+        width: 85,
+        position: 'absolute',
+        borderColor: 'white',
+        top: 30,
+        left: 20,
     },
 
     categoryHeading: {

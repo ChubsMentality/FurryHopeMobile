@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { ActivityIndicator, Image, SafeAreaView, ScrollView, StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, View, Text, TextInput, TouchableOpacity, useWindowDimensions } from 'react-native'
 import { RadioButton } from 'react-native-paper'
 import { Picker } from '@react-native-picker/picker'
 import { CredentialsContext } from '../CredentialsContext'
@@ -31,7 +31,6 @@ const RegisterAnimal = ({ navigation }) => {
     const [date, setDate] = useState()
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
-
     const [nameFocused, setNameFocused] = useState(false)
     const [emailFocused, setEmailFocused] = useState(false)
     const [contactNoFocused, setContactNoFocused] = useState(false)
@@ -42,6 +41,8 @@ const RegisterAnimal = ({ navigation }) => {
     const [animalAgeFocused, setAnimalAgeFocused] = useState(false)
     const [animalColorFocused, setAnimalColorFocused] = useState(false)
     const [tagNoFocused, setTagNoFocused] = useState(false)
+    const [isCitizen, setIsCitizen] = useState()
+    const window = useWindowDimensions()
 
     // Step Indicator
     const [currentStep, setCurrentStep] = useState(0)
@@ -116,9 +117,9 @@ const RegisterAnimal = ({ navigation }) => {
                 const proofOfAntiRabiesComplete = false
                 const photocopyCertOfAntiRabiesComplete = false
 
-                const { data } = await axios.post(`${URL}api/users/registerAnimal`, {
+                const { data } = await axios.post(`http://localhost:5000/api/users/registerAnimal`, {
                     animalType, registrationType, applicantImg, name, contactNo, lengthOfStay, address,
-                    animalName, animalBreed, animalAge, animalColor, animalGender, tagNo, date, registrationStatus, email, adoptionReference, isFromAdoption,
+                    animalName, animalBreed, animalAge, animalColor, animalGender, date, registrationStatus, email, adoptionReference, isFromAdoption,
                     regFeeComplete, certOfResidencyComplete, ownerPictureComplete, petPhotoComplete, proofOfAntiRabiesComplete,
                     photocopyCertOfAntiRabiesComplete
                 }, config)
@@ -144,7 +145,14 @@ const RegisterAnimal = ({ navigation }) => {
         }, 2000)
     }
 
+    const getUser = async () => {
+        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`) 
+        setIsCitizen(data.isMarikinaCitizen)
+    } 
+
     useEffect(() => {
+        getUser()
+
         setApplicantImg(storedCredentials.profilePicture)
         setName(storedCredentials.fullName)
         setEmail(storedCredentials.email)
@@ -154,9 +162,35 @@ const RegisterAnimal = ({ navigation }) => {
         var d = new Date()
         setDate(d.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit', year: 'numeric' }))
     }, [])
+
+    isCitizen && console.log(isCitizen === false ? 'false' : 'true')
     
     return (
         <SafeAreaView style={styles.body}>
+            {isCitizen || 
+                <Pressable style={{
+                    width: window.width, 
+                    height: window.height, 
+                    backgroundColor: '#111',
+                    opacity: .5,
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    zIndex: 5
+                }}></Pressable>
+            }
+
+            {isCitizen ||
+                <View style={styles.notCitizenModal}>
+                    <Text style={styles.notCitizenHeader}>Oops...</Text>
+                    <Text style={styles.notCitizednSub}>This feature is only available{'\n'} for citizens of Marikina City</Text>
+
+                    <TouchableOpacity style={styles.redirectBtn} onPress={() => navigation.navigate('Browse')}>
+                        <Text style={styles.redirectTxt}>Back to the Main Screen.</Text>
+                    </TouchableOpacity>
+                </View>
+            }
+
             <ScrollView>
                 <TopNav ScreenName='Pet Registration' />
 
@@ -168,6 +202,7 @@ const RegisterAnimal = ({ navigation }) => {
                     stepCount={2}
                     style={styles.stepIndicator}
                 />
+
 
                 {currentStep_0 &&
                     <View style={styles.secondStep}>
@@ -351,15 +386,6 @@ const RegisterAnimal = ({ navigation }) => {
                             onBlur={() => setAnimalColorFocused(false)}
                         />
 
-                        <Text style={styles.formLabel}>Tag No.</Text>
-                        <TextInput 
-                            style={tagNoFocused ? styles.formInputFocused : styles.formInput}
-                            value={tagNo}
-                            onChangeText={setTagNo}
-                            onFocus={() => setTagNoFocused(true)}
-                            onBlur={() => setTagNoFocused(false)}
-                        />
-
                         <Text style={styles.formLabel}>Gender</Text>
                         <Picker
                             itemStyle={styles.animalSexPickerLabel}
@@ -402,6 +428,50 @@ const styles = StyleSheet.create({
     body: {
         backgroundColor: 'white',
         flex: 1,
+    },
+
+    notCitizenModal: {
+        height: 'auto',
+        width: 330,
+        backgroundColor: 'white',
+        borderRadius: 5,
+        position: 'absolute',
+        top: '35%',
+        left: '50%',
+        transform: [{
+            translateX: '-50%',
+            translateY: '-50%',
+        }],
+        zIndex: 10,
+    },
+
+    notCitizenHeader: {
+        fontFamily: 'PoppinsBold',
+        fontSize: 28,
+        textAlign: 'center',
+        marginTop: 30,
+    },
+
+    notCitizednSub: {
+        textAlign: 'center',
+        fontSize: 18,
+        lineHeight: 28, 
+        marginTop: 5, 
+    },
+
+    redirectBtn: {
+        height: 60,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+        borderTopColor: '#b0b0b0',
+        borderTopWidth: 1,
+    },
+
+    redirectTxt: {
+        fontSize: 16,
+        fontFamily:'PoppinsSemiBold',
     },
 
     formLabel: {

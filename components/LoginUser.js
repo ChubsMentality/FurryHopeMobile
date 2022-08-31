@@ -25,7 +25,7 @@ const LoginUser = ({ navigation }) => {
         } else {
             // async / await format
             try {
-                const { data } = await axios.post(`${URL}api/users/loginUser`, {email, password})
+                const { data } = await axios.post(`http://localhost:5000/api/users/loginUser`, {email, password})
                 console.log(data)
 
                 // Stores the user's credential inside async storage, and will automatically navigate to the home page

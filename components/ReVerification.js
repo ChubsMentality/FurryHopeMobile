@@ -26,7 +26,7 @@ const VerificationScreen = ({ navigation, route }) => {
         Keyboard.dismiss()
 
         try {
-            const { data } = await axios.post(`${URL}api/users/reVerifyUser`, { verificationCode, email })
+            const { data } = await axios.post(`http://localhost:5000/api/users/reVerifyUser`, { verificationCode, email })
             console.log(data)
             alert('Your account has been validated, you will be logged in the application.')
             navigation.navigate('Login')

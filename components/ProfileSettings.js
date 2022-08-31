@@ -16,7 +16,7 @@ const ProfileSettings = ({ navigation, route }) => {
 
     const fetchUser = async () => {
         try {
-            const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
+            const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
             setUserData(data)
             setFullName(data.fullName)
             setEmail(data.email)
@@ -34,7 +34,7 @@ const ProfileSettings = ({ navigation, route }) => {
         } else {
             try {
                 setLoading(true)
-                const { data } = await axios.put(`${URL}api/users/updateUserProfile/${storedCredentials.id}`, { fullName, email, contactNo, password })
+                const { data } = await axios.put(`http://localhost:5000/api/users/updateUserProfile/${storedCredentials.id}`, { fullName, email, contactNo, password })
                 console.log(data)
                 setPassword('')
                 setConfirmPassword('')

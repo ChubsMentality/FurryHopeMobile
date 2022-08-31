@@ -24,7 +24,7 @@ const ViewAnimalData = ({ navigation, route }) => {
 
     const getDataById = async () => {
         try {
-            const { data } = await axios.get(`${URL}api/animals/${animalId}`)
+            const { data } = await axios.get(`http://localhost:5000/api/animals/${animalId}`)
             console.log(data)
             setId(data._id)
             setName(data.name)
@@ -305,7 +305,7 @@ export default ViewAnimalData
 
 //     const getDataById = async () => {
 //         try {
-//             const { data } = await axios.get(`${URL}api/animals/${animalId}`)
+//             const { data } = await axios.get(`http://localhost:5000/api/animals/${animalId}`)
 //             console.log(data)
 //             setName(data.name);
 //             setBreed(data.breed);

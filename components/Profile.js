@@ -28,9 +28,10 @@ const Profile = () => {
 
     const fetchUser = async () => {
         try {
-            const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
+            const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
             setUserData(data)
             setProfilePicturePreview(data.profilePicture)
+            console.log(data.profilePicture)
         } catch (error) {
             console.log(error)
         }
@@ -44,7 +45,7 @@ const Profile = () => {
 
     const myAdoptions = async () => {
         try {
-            const { data } = await axios.get(`${URL}api/users/getSpecificAdoptions`, config)
+            const { data } = await axios.get(`http://localhost:5000/api/users/getSpecificAdoptions`, config)
             console.log(data)
             setAdoptions(quickSort(data, 0, data.length - 1))
         } catch (error) {
@@ -54,7 +55,7 @@ const Profile = () => {
 
     const petRegistrations = async () => {
         try {
-            const { data } = await axios.get(`${URL}api/users/getSpecificRegistrations`, config)
+            const { data } = await axios.get(`http://localhost:5000/api/users/getSpecificRegistrations`, config)
             setRegistrations(quickSort(data, 0, data.length - 1))
             console.log(data)
         } catch (error) {

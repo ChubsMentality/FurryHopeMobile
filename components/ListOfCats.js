@@ -41,7 +41,7 @@ const ListOfDogs = ({ navigation }) => {
     }
 
     const fetchDogs = async () => {
-        const { data } = await axios.get(`${URL}api/animals/getCats`)
+        const { data } = await axios.get(`http://localhost:5000/api/animals/getCats`)
         setCurrentList(data.filter(filterAvail))
     }
   

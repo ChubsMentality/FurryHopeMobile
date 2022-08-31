@@ -11,7 +11,7 @@ const ReVerify = ({ navigation }) => {
         if(!email) return alert('Please enter your email')
 
         try {
-            const { data } = await axios.post(`${URL}api/users/resendCode`, { email })
+            const { data } = await axios.post(`http://localhost:5000/api/users/resendCode`, { email })
             console.log(data)
             navigation.navigate('ReVerification', { email: email })
         } catch (error) {

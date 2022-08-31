@@ -11,12 +11,14 @@ const AdoptionForm = ({ route, navigation }) => {
     const d = new Date()
     const URL = 'https://furryhopebackend.herokuapp.com/'
     const { animalId } = route.params
+    console.log(animalId)
 
     const [name, setName] = useState('')
     const [applicantName, setApplicantName] = useState('')
     const [email, setEmail] = useState('')
     const [contactNo, setContactNo] = useState('')
     const [address, setAddress] = useState('')  
+    const [isMarikinaCitizen, setIsMarikinaCitizen] = useState()
     const [animalName, setAnimalName] = useState('')
     const [animalBreed, setAnimalBreed] = useState('')
     const [animalType, setAnimalType] = useState('')
@@ -30,9 +32,6 @@ const AdoptionForm = ({ route, navigation }) => {
     const [applicantImg, setApplicantImg] = useState('')
     const [lengthOfStay, setLengthOfStay] = useState('')
     const [adoptionReference, setAdoptionReference] = useState()
-
-    console.log(date)
-
     const [loading, setLoading] = useState(false)
     const [applicantNameFocused, setApplicantNameFocused] = useState(false)
     const [emailFocused, setEmailFocused] = useState(false)
@@ -40,6 +39,7 @@ const AdoptionForm = ({ route, navigation }) => {
     const [addressFocused, setAddressFocused] = useState(false)
     const [isCitizen, setIsCitizen] = useState(true)
     const [regToPound, setRegToPound] = useState(true)
+    const [tagNo, setTagNo] = useState('')
     const [lengthOfStayFocused, setLengthOfStayFocused] = useState(false)
 
     const applicationStatus = 'Pending'
@@ -48,7 +48,7 @@ const AdoptionForm = ({ route, navigation }) => {
     const adoptionStatus = 'Pending'
 
     const getAnimalById = async () => {
-        const { data } = await axios.get(`${URL}api/animals/${animalId}`)
+        const { data } = await axios.get(`http://localhost:5000/api/animals/${animalId}`)
         setAnimalName(data.name)
         setAnimalBreed(data.breed)
         setAnimalType(data.type)
@@ -59,13 +59,25 @@ const AdoptionForm = ({ route, navigation }) => {
     }
 
     const getUserById = async () => {
-        const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
+        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
         setName(data.fullName)
         setApplicantName(data.fullName)
         setEmail(data.email)
         setContactNo(data.contactNo)
         setAddress(data.address)
         setApplicantImg(data.profilePicture)
+        setIsMarikinaCitizen(data.isMarikinaCitizen)
+    }
+
+    const generateTagNo = () => {
+        let tagNo = ''
+
+        for (let i = 0; i <= 3; i++) {
+            const randomNum = Math.round(Math.random() * 9)
+            tagNo += randomNum
+        }
+
+        setTagNo(tagNo)
     }
 
     const pickDocument = async () => {
@@ -113,7 +125,7 @@ const AdoptionForm = ({ route, navigation }) => {
         
     }
     
-    const submit = async () => {
+    const submit = async () => { 
         const config = {
             headers: {
                 'Content-Type': 'application/json',
@@ -136,16 +148,16 @@ const AdoptionForm = ({ route, navigation }) => {
             setLoading(false)
             return 
         } else {
-            if(regToPound) {
+            if(isMarikinaCitizen) {
                 console.log('register and submit adoption')
                 try {
                     let hasBeenInterviewed = false
                     let hasPaid = false
                     
     
-                    const data = await axios.post(`${URL}api/users/submitAdoption`, {
+                    const data = await axios.post(`http://localhost:5000/api/users/submitAdoption`, {
                         animalId, applicantName, email, contactNo, address, applicantImg, validId, animalName, animalBreed,
-                        animalType, animalGender, animalColor, animalImg, adoptionStatus, date, applicationStatus, hasBeenInterviewed, hasPaid, adoptionReference
+                        animalType, animalGender, animalColor, animalImg, adoptionStatus, tagNo, date, applicationStatus, hasBeenInterviewed, hasPaid, adoptionReference
                     }, config)
     
                     console.log(data)
@@ -155,7 +167,7 @@ const AdoptionForm = ({ route, navigation }) => {
                 }
     
                 try {                
-                    const data = await axios.put(`${URL}api/admins/updateAdoptionStatus/${animalId}`, { adoptionStatus })
+                    const data = await axios.put(`http://localhost:5000/api/admins/updateAdoptionStatus/${animalId}`, { adoptionStatus })
                     // console.log(data)
                 } catch (error) {
                     console.log(error)
@@ -164,7 +176,6 @@ const AdoptionForm = ({ route, navigation }) => {
                 try {
                     const registrationType = 'New'
                     const registrationStatus = 'Pending'
-                    const tagNo = 'N / A'
                     const isFromAdoption = true
                     const regFeeComplete = false
                     const certOfResidencyComplete = false
@@ -172,7 +183,8 @@ const AdoptionForm = ({ route, navigation }) => {
                     const petPhotoComplete = false
                     const proofOfAntiRabiesComplete = false
                     const photocopyCertOfAntiRabiesComplete = false
-                    const { data } = await axios.post(`${URL}api/users/registerAnimal`, {
+
+                    const { data } = await axios.post(`http://localhost:5000/api/users/registerAnimal`, {
                         animalType, registrationType, applicantImg, name, contactNo, lengthOfStay, address,
                         animalName, animalBreed, animalAge, animalColor, animalGender, tagNo, date, registrationStatus, email, adoptionReference, isFromAdoption,
                         regFeeComplete, certOfResidencyComplete, ownerPictureComplete, petPhotoComplete, proofOfAntiRabiesComplete, photocopyCertOfAntiRabiesComplete,
@@ -194,7 +206,7 @@ const AdoptionForm = ({ route, navigation }) => {
                     let hasBeenInterviewed = false
                     let hasPaid = false
     
-                    const data = await axios.post(`${URL}api/users/submitAdoption`, {
+                    const data = await axios.post(`http://localhost:5000/api/users/submitAdoption`, {
                         animalId, applicantName, email, contactNo, address, applicantImg, validId, animalName, animalBreed,
                         animalType, animalGender, animalColor, animalImg, adoptionStatus, date, applicationStatus, hasBeenInterviewed, hasPaid, adoptionReference
                     }, config)
@@ -207,7 +219,7 @@ const AdoptionForm = ({ route, navigation }) => {
                 }
     
                 try {                
-                    const data = await axios.put(`${URL}api/admins/updateAdoptionStatus/${animalId}`, { adoptionStatus })
+                    const data = await axios.put(`http://localhost:5000/api/admins/updateAdoptionStatus/${animalId}`, { adoptionStatus })
                     // console.log(data)
                 } catch (error) {
                     console.log(error)
@@ -226,6 +238,7 @@ const AdoptionForm = ({ route, navigation }) => {
         setAdoptionReference(uuid.v4())
         getUserById()
         getAnimalById()
+        generateTagNo()
     }, [animalId])
 
     useEffect(() => {
@@ -237,20 +250,7 @@ const AdoptionForm = ({ route, navigation }) => {
     return (
         <SafeAreaView style={styles.body}>
             <ScrollView>
-                {/* <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-                    <Image style={styles.icon} source={returnIcon}/>
-                    <Text style={styles.backBtnText}>Back</Text>
-                </TouchableOpacity> */}
-                
                 <View style={styles.paddedView}>
-                    {/* <Text style={styles.header}>ADOPTION FORM</Text>
-                    <View style={styles.headerUnderline}></View>
-
-                    <Text style={styles.dateLabel}>Date:
-                        <Text style={styles.dateValue}>{d.toLocaleDateString()}</Text>
-                    </Text> */}
-
-                    {/* <Text style={styles.adopterInfoHeader}>Adopter's Information</Text> */}
                     <Text style={[styles.adopterInfoLabel, { marginTop: 40 }]}>Name</Text>
                     <TextInput
                         style={applicantNameFocused ? styles.adopterInfoInputFocused : styles.adopterInfoInput}
@@ -289,6 +289,21 @@ const AdoptionForm = ({ route, navigation }) => {
                         onBlur={() => setAddressFocused(false)}
                     />
 
+                    {isMarikinaCitizen ?
+                        <>
+                            <Text style={styles.adopterInfoLabel}>Length of stay in the city</Text>
+                            <TextInput
+                                style={lengthOfStayFocused ? styles.adopterInfoInputFocused : styles.adopterInfoInput}
+                                value={lengthOfStay}
+                                onChangeText={setLengthOfStay}
+                                onFocus={() => setLengthOfStayFocused(true)}
+                                onBlur={() => setLengthOfStayFocused(false)}
+                            />
+                        </>
+                        :   
+                        <></>
+                    }
+
                     <Text style={styles.adopterInfoLabel}>Please attach your valid Id</Text>
                     <View style={styles.chooseFileContainer}>
                         <TouchableOpacity style={styles.chooseFileBtn} onPress={() => pickDocument()}>
@@ -299,97 +314,45 @@ const AdoptionForm = ({ route, navigation }) => {
                         <Text style={styles.fileName}>{fileName}</Text>
                     </View>
 
-                    <Text style={styles.isCitizenLabel}>Are you a citizen of Marikina City?</Text>
-                    <View style={styles.citizenCheckBoxContainer}>
-                        <View style={isCitizen ? styles.citizenYesContainerActive : styles.citizenYesContainer}>
-                            <TouchableOpacity style={isCitizen ? styles.citizenCheckBoxActive : styles.citizenCheckBox} onPress={() => setIsCitizen(true)}>
-                                {isCitizen ?
-                                    <Ionicons name='ios-checkmark-sharp' size={20} color='white' />
-                                    :
-                                    <></>
-                                }
-                            </TouchableOpacity>
-
-                            <Text style={isCitizen ? styles.citizenCheckBoxLabelActive : styles.citizenCheckBoxLabel}>Yes</Text>
-                        </View>
-
-                        <View style={isCitizen ? styles.citizenNoContainer : styles.citizenNoContainerActive}>
-                            <TouchableOpacity style={isCitizen ? styles.citizenCheckBox : styles.citizenCheckBoxActive} onPress={() => setIsCitizen(false)}>
-                                {isCitizen ?
-                                    <></>
-                                    :
-                                    <Ionicons name='ios-checkmark-sharp' size={20} color='white' />
-                                }
-                            </TouchableOpacity>
-
-                            <Text style={isCitizen ? styles.citizenCheckBoxLabel : styles.citizenCheckBoxLabelActive}>No</Text>
-                        </View>
-                    </View>
-                    
-                    {isCitizen ?
-                        <View style={styles.petRegistrationContainer}>
-                            <Text style={styles.petRegistrationHeader}>Do you want to register the animal to the city pound upon adoption?</Text>
-
-                            <View style={styles.petRegCheckBoxContainer}>
-                                <View style={styles.petRegYesContainer}>
-                                    <TouchableOpacity style={regToPound ? styles.petRegCheckBoxActive : styles.petRegCheckBox} onPress={() => setRegToPound(true)}>
-                                        {regToPound ? 
-                                            <Ionicons name='ios-checkmark-sharp' size={20} color='black' />
-                                            :
-                                            <></>
-                                        }
-                                    </TouchableOpacity>
-
-                                    <Text style={regToPound ? styles.petRegLabelActive : styles.petRegLabel}>Yes</Text>
-                                </View>
-
-                                <View style={styles.petRegNoContainer}>
-                                    <TouchableOpacity style={regToPound ? styles.petRegCheckBox : styles.petRegCheckBoxActive} onPress={() => setRegToPound(false)}>
-                                        {regToPound ?
-                                            <></>
-                                            :
-                                            <Ionicons name='ios-checkmark-sharp' size={20} color='black' />
-                                        }
-                                    </TouchableOpacity>
-
-                                    <Text style={regToPound ? styles.petRegLabel : styles.petRegLabelActive}>No</Text>
-                                </View>    
-                            </View>
-
-                            {regToPound ?
-                                <>
-                                    <Text style={styles.petRegReqHeader}>Requirements for registering a pet:</Text>
-                                    <Text style={styles.petRegRequirements}>Registration fee of ₱ 75.00</Text>
-                                    <Text style={styles.petRegRequirements}>Certificate of Residency issued by barangay or any valid ID.</Text>
-                                    <Text style={styles.petRegRequirements}>Two (2) pcs of 2x2 picture of owner</Text>
-                                    <Text style={styles.petRegRequirements}>Photo of the pet in 3R size (Whole body, Side view)</Text>
-                                    <Text style={styles.petRegRequirements}>Certificate or proof of Anti-Rabies Vaccination</Text>
-                                    <Text style={styles.petRegRequirements}>Photocopy of the certificate that the pet has already been vaccinated for anti-rabies.</Text>
-
-                                    <Text style={styles.petRegLabelLength}>Length of Stay in the city</Text>
-                                    <TextInput
-                                        value={lengthOfStay}
-                                        onChangeText={setLengthOfStay}
-                                        style={lengthOfStay ? styles.lengthOfStayInputActive : styles.lengthOfStayInput}
-                                        onFocus={() => setLengthOfStayFocused(true)}
-                                        onBlur={() => setLengthOfStayFocused(false)} 
-                                    />
-                                </>
-                                :
-                                <></>
-                            }
+                    {isMarikinaCitizen ?
+                        <View style={styles.noteAdoptionContainer}>
+                            <Text style={styles.noteAdoptionTxt}>Note: Users from Marikina City are required to register to the city pound the animal they want to adopt once it's finished. You can see the progress of both the adoption and the registration on your profile screen and be on the lookout for message on your email.</Text>
                         </View>
                         :
                         <></>
                     }
 
-                    <TouchableOpacity style={styles.submitBtn} onPress={() => submit()}>
-                        {loading ?
-                                <ActivityIndicator color='white' style={{ marginTop: '14px' }} />
-                            :
-                                <Text style={styles.submitBtnText}>SUBMIT</Text>
-                        }
-                    </TouchableOpacity>
+                    {isMarikinaCitizen ?
+                        <View style={styles.petRegistrationContainer}>
+                            <Text style={styles.petRegReqHeader}>Requirements for registering a pet:</Text>
+                            <Text style={styles.petRegRequirements}>Registration fee of ₱ 75.00</Text>
+                            <Text style={styles.petRegRequirements}>Certificate of Residency issued by barangay or any valid ID.</Text>
+                            <Text style={styles.petRegRequirements}>Two (2) pcs of 2x2 picture of owner</Text>
+                            <Text style={styles.petRegRequirements}>Photo of the pet in 3R size (Whole body, Side view)</Text>
+                            <Text style={styles.petRegRequirements}>Certificate or proof of Anti-Rabies Vaccination</Text>
+                            <Text style={styles.petRegRequirements}>Photocopy of the certificate that the pet has already been vaccinated for anti-rabies.</Text>
+                        </View>
+                        :
+                        <></>
+                    }
+                    
+                    {isMarikinaCitizen ?
+                        <TouchableOpacity style={styles.submitBtn} onPress={() => submit()}>
+                            {loading ?
+                                    <ActivityIndicator color='white' style={{ marginTop: '14px' }} />
+                                :
+                                    <Text style={styles.submitBtnText}>SUBMIT</Text>
+                            }
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity style={styles.submitBtnNotCitizen} onPress={() => submit()}>
+                            {loading ?
+                                    <ActivityIndicator color='white' style={{ marginTop: '14px' }} />
+                                :
+                                    <Text style={styles.submitBtnText}>SUBMIT</Text>
+                            }
+                        </TouchableOpacity>
+                    }
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -604,8 +567,10 @@ const styles = StyleSheet.create({
 
     petRegistrationContainer: {
         backgroundColor: '#111',
-        padding: 20,
-        marginTop: 40,
+        paddingRight: 20,
+        paddingLeft: 20,
+        paddingBottom: 20,
+        marginTop: 30,
         overflow: 'hidden',
         borderRadius: 5,
     },
@@ -614,10 +579,26 @@ const styles = StyleSheet.create({
         color: 'white',
         fontFamily: 'PoppinsMedium',
         fontSize: 16,
+        marginTop: -20,
     },
 
     petRegCheckBoxContainer: {
         marginTop: 25,
+    },
+
+    noteAdoptionContainer: {
+        marginTop: 30,
+        padding: 20,
+        backgroundColor: '#111',
+        borderRadius: 5,
+        overflow: 'hidden',
+    },
+
+    noteAdoptionTxt: {
+        fontFamily: 'PoppinsRegular',
+        fontSize: 14.5,
+        color: 'white',
+        lineHeight: 30,
     },
 
     petRegYesContainer: {
@@ -778,10 +759,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
+    submitBtnNotCitizen: {
+        width: '100%',
+        height: 60,
+        backgroundColor: '#111',
+        borderRadius: 5,
+        marginTop: 190,
+        marginBottom: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
     submitBtnText: {
         color: 'white',
         fontFamily: 'PoppinsSemiBold',
         fontSize: 21,
         letterSpacing: 2,
     },
+
+
 })

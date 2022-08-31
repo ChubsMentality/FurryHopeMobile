@@ -129,7 +129,7 @@ const App = () => {
   */
   useEffect(() => {
     const getCurrentCount = async () => {
-      const { data } = await axios.get(`${URL}api/animals/totalCount`)
+      const { data } = await axios.get(`http://localhost:5000/api/animals/totalCount`)
       setCurrentCount(data.currentCount)
       console.log(`Current Count: (${currentCount})`)
     }
@@ -226,18 +226,18 @@ const App = () => {
                   <Stack.Screen name='View Pending' component={ViewAnimalDataPending} options={{ headerShown: false }} />
                   <Stack.Screen name='View Adopted' component={ViewAnimalDataAdopted} options={{ headerShown: false }} />
                   <Stack.Screen name='Adoption Form' component={AdoptionForm} />
-                  {/* <Stack.Screen name="Profile" component={Profile} /> */}
                   <Stack.Screen name='Edit Profile' component={EditProfile} />
+                  {/* <Stack.Screen name="Profile" component={Profile} /> */}
                   <Stack.Screen name='Change Password' component={ChangePassword} />
                   <Stack.Screen name='Profile Settings' component={ProfileSettings} options={{ headerShown: false }} />
                 </Stack.Group>
               ) : (
                 // If not, only the login and register screens are available
                 <Stack.Group>
-                  <Stack.Screen name='OnBoarding' component={OnBoarding} options={{headerShown: false}} />
                   <Stack.Screen name='Login' component={Login} options={{headerShown: false}} />
-                  <Stack.Screen name='Re-verify' component={ReVerify} options={{ headerShown: false }} />
+                  <Stack.Screen name='OnBoarding' component={OnBoarding} options={{headerShown: false}} />
                   <Stack.Screen name='Register' component={Register} options={{ headerShown: false }} />
+                  <Stack.Screen name='Re-verify' component={ReVerify} options={{ headerShown: false }} />
                   <Stack.Screen name='Forgot Password' component={ForgotPassword} options={{headerShown: false }} />
                   <Stack.Screen name='Verification' component={Verification} options={{ headerShown: false }} />
                   <Stack.Screen name='ReVerification' component={ReVerification} options={{ headerShown: false }} />

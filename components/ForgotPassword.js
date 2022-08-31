@@ -16,7 +16,7 @@ const ForgotPassword = ({ navigation }) => {
         }
 
         try {
-            const { data } = await axios.post(`${URL}api/users/sendResetPassword`, { email })
+            const { data } = await axios.post(`http://localhost:5000/api/users/sendResetPassword`, { email })
             console.log(data)
             alert('Check your email for the link.')
         } catch (error) {

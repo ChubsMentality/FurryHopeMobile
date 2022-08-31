@@ -47,12 +47,11 @@ const Donate = () => {
     }
 
     const [items, setItems] = useState([])
-    const [itemName, setItemName] = useState('')
-    const [quantity, setQuantity] = useState('')
+    const [itemName, setItemName] = useState('Dog Food')
+    const [tempQuantity, setTempQuantity] = useState('')
+    const [quantityMeasurement, setQuantityMeasurement] = useState('g')
     const [overlay, setOverlay] = useState(false)
     const [addItemModal, setAddItemOverlay] = useState(false)
-
-    console.log(`${hour}:${minute} ${timePeriod}`)
 
     const config = {
         headers: {
@@ -67,9 +66,12 @@ const Donate = () => {
     }
 
     const addToItemsHandler = () => {
+        let quantity = `${tempQuantity} ${quantityMeasurement}`
+
         setItems([...items, { id: uuid.v4(), itemName: itemName, quantity: quantity }])
-        setItemName('')
-        setQuantity('')
+        setItemName('Dog Food')
+        setTempQuantity('')
+        setQuantityMeasurement('g')
         toggleModal()
     }
 
@@ -105,6 +107,8 @@ const Donate = () => {
             setTempMonth('12')
         }
     }, [selectedMonth])
+
+    console.log(items)
 
     const submitHandler = async () => {
         setLoading(true)
@@ -143,8 +147,10 @@ const Donate = () => {
             setLoading(false)
             return
         } else {
+
+            console.log(`${dateOfDonation}, ${time}, ${name}, ${email}, ${contactNo}, ${items}, ${profilePicture}`)
             try {
-                const { data } = await axios.post(`${URL}api/users/submitDonation`, 
+                const { data } = await axios.post(`http://localhost:5000/api/users/submitDonation`, 
                 { dateOfDonation, time, name, email, contactNo, items, profilePicture }, config)
 
                 console.log(data)
@@ -161,7 +167,7 @@ const Donate = () => {
 
     const getUser = async () => {
         try {
-            const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
+            const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
             console.log(data.profilePicture)
             setName(data.fullName)
             setEmail(data.email)
@@ -175,6 +181,8 @@ const Donate = () => {
     useEffect(() => {
         getUser()
     }, [])
+
+    console.log(profilePicture)
 
     return (
         <SafeAreaView style={styles.body}>
@@ -440,23 +448,54 @@ const Donate = () => {
                         </TouchableOpacity>
                     </View>
 
-                    <TextInput
-                        style={itemNameFocused ? [styles.inputFocused, styles.inputItemName] : [styles.input, styles.inputItemName]}
-                        value={itemName}
-                        onChangeText={setItemName}
-                        onFocus={() => setItemNameFocused(true)}
-                        onBlur={() => setItemNameFocused(false)}
-                        placeholder='Item Name (e.g. Dog Treats)' 
-                    />
+                    <Text style={styles.addItemLabelItemName}>Item Name</Text>
+                    <Picker
+                        selectedValue={itemName}
+                        onValueChange={(itemValue, itemIndex) => {setItemName(itemValue)}}
+                        style={styles.itemNamePicker}
+                        itemStyle={styles.addItemStyles}
+                    >
+                        <Picker.Item label='Dog Food' value='Dog Food' />
+                        <Picker.Item label='Cat Food' value='Cat Food' />
+                        <Picker.Item label='Treats' value='Treats' />
+                    </Picker>
 
-                    <TextInput 
-                        style={quantityFocused ? [styles.inputFocused, styles.inputQuantity] : [styles.input, styles.inputQuantity]}
-                        value={quantity}
-                        onChangeText={setQuantity}
-                        onFocus={() => setQuantityFocused(true)}
-                        onBlur={() => setQuantityFocused(false)}
-                        placeholder='Quantity'
-                    />
+                    <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', marginTop: 25, marginRight: 35, marginLeft: 35, }}>
+                        <View>
+                            <Text style={styles.itemQuantityLabel}>Quantity</Text>
+                            <TextInput 
+                                value={tempQuantity}
+                                onChangeText={setTempQuantity}
+                                style={styles.quantityInput}
+                                placeholder='Enter amount here...'
+                            />
+                        </View>
+
+                        <View>
+                            <Text style={styles.itemQuantityLabel}>Measurement Unit</Text>
+                            <Picker
+                                value={quantityMeasurement}
+                                onValueChange={(itemValue, itemIndex) => {setQuantityMeasurement(itemValue)}}
+                                style={styles.quantityPicker}
+                                itemStyle={styles.quantityItemPicker}
+                            >
+                                {itemName === 'Treats' ?
+                                    <>
+                                        <Picker.Item label='piece(s)' value='pcs'/>
+                                        <Picker.Item label='pack(s)' value='p'/>
+                                    </>
+                                    :
+                                    <>
+                                        <Picker.Item label='gram(s)' value='g'/>
+                                        <Picker.Item label='milligram(s)' value='mg'/>
+                                        <Picker.Item label='kilogram(s)' value='kg'/>
+                                        <Picker.Item label='pound(s)' value='lbs'/>
+                                        <Picker.Item label='sack(s)' value='sack/s'/>
+                                    </>
+                                }
+                            </Picker>
+                        </View>
+                    </View>
 
                     <View 
                         style={{ 
@@ -466,7 +505,7 @@ const Donate = () => {
                             marginRight: 35, marginLeft: 35 
                         }}
                     >
-                        <TouchableOpacity style={styles.cancelItemsBtn} onPress={() => toggleAddItemModal()}>
+                        <TouchableOpacity style={styles.cancelItemsBtn} onPress={() => toggleModal()}>
                             <Text style={styles.cancelItemsTxt}>Cancel</Text>
                         </TouchableOpacity>
 
@@ -643,7 +682,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
-        height: 320,
+        height: 350,
         width: '100%',
         paddingTop: 10,
         paddingBottom: 10,
@@ -670,8 +709,41 @@ const styles = StyleSheet.create({
     addItemLabel: {
         marginTop: 15,
         marginBottom: 5,
+        fontFamily: 'PoppinsSemiBold',
+        fontSize: 18,
+    },
+
+    addItemLabelItemName: {
+        marginTop: 20,
+        marginRight: 35,
+        marginLeft: 35,
         fontFamily: 'PoppinsMedium',
-        fontSize: 16,
+        fontSize: 15,
+    },
+
+    itemNamePicker: {
+        marginTop: 5,
+        marginRight: 35,
+        marginLeft: 35,
+        fontFamily: 'PoppinsRegular',
+        padding: 6,
+    },
+
+    itemQuantityLabel: {
+        fontFamily: 'PoppinsMedium',
+        fontSize: 15,
+    },
+
+    quantityInput: {
+        fontFamily: 'PoppinsRegular',
+        padding: 6,
+        marginTop: 5,
+    },
+
+    quantityPicker: {
+        marginTop: 5,
+        fontFamily: 'PoppinsRegular',
+        padding: 6,
     },
 
     inputItemName: {

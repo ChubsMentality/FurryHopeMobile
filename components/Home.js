@@ -41,8 +41,8 @@ const Home = ({ navigation }) => {
 
     const filterPreferences = async () => {
         try {
-            const { data:userData } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
-            const { data:animalData } = await axios.get(`${URL}api/animals`)
+            const { data:userData } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+            const { data:animalData } = await axios.get(`http://localhost:5000/api/animals`)
 
             setAnimalPreferences(userData.animalPreferences)
             setAnimals(animalData)

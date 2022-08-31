@@ -22,7 +22,7 @@ const DrawerContainer = () => {
     const URL = 'https://furryhopebackend.herokuapp.com/'
 
     const getUser = async () => {
-        const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
+        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
     }
 
     useEffect(() => {
@@ -31,7 +31,7 @@ const DrawerContainer = () => {
 
     return (
         <Drawer.Navigator
-            initialRouteName='Browse'
+            initialRouteName='Report an Animal'
             drawerContent={props => <CustomDrawer {...props} />}
             screenOptions={{
                 drawerLabelStyle: {

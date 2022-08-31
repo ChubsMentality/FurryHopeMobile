@@ -15,8 +15,9 @@ const CustomDrawer = (props) => {
     const navigation = useNavigation()
 
     const getUser = async () => {
-        const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
+        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
         setProfilePicture(data.profilePicture)
+        console.log(data.profilePicture)
     }
 
     const logout = async () => {

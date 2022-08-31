@@ -44,7 +44,7 @@ const ListOfDogs = ({ navigation }) => {
     }
 
     const fetchDogs = async () => {
-        const { data } = await axios.get(`${URL}api/animals/getDogs`)
+        const { data } = await axios.get(`http://localhost:5000/api/animals/getDogs`)
         setDogs(data)
         setCurrentList(data.filter(filterAvail))
     }
@@ -154,7 +154,7 @@ const ListOfDogs = ({ navigation }) => {
                     <></>
                 }
 
-                <View style={{ marginTop: 30, marginRight: 30, marginLeft: 30, flexDirection: 'row', alignItems: 'center' }}>
+                {/* <View style={{ marginTop: 30, marginRight: 30, marginLeft: 30, flexDirection: 'row', alignItems: 'center' }}>
                     {toggleView === true ?
                         <>
                             <TouchableOpacity style={[styles.toggleListActive, styles.toggleListBtn]} onPress={() => setToggleView(true)}>
@@ -180,9 +180,9 @@ const ListOfDogs = ({ navigation }) => {
                             </TouchableOpacity>
                         </>
                     }
-                </View>
+                </View> */}
 
-                {toggleView === true ?
+                {/* {toggleView === true ?
                     <View style={styles.dogsContainer}>
                         {currentList && currentList.filter((animals) => {
                             if(searchQuery === '') {
@@ -220,7 +220,26 @@ const ListOfDogs = ({ navigation }) => {
                             />
                         ))}
                     </View>
-                }
+                } */}
+
+                <View style={styles.dogsContainer}>
+                    {currentList && currentList.filter((animals) => {
+                        if(searchQuery === '') {
+                            return animals
+                        } else if(animals.breed.toLowerCase().includes(searchQuery.toLowerCase())) {
+                            return animals
+                        }
+                    }).map((item) => (
+                        <AnimalCard 
+                            key={item._id}
+                            _id={item._id}
+                            animalImg={item.animalImg}
+                            name={item.name}
+                            breed={item.breed}
+                            availUntil={item.availUntil}
+                        />
+                    ))}
+                </View>
                 
                 <View style={{ marginTop: 50 }}></View>
             </ScrollView>

@@ -29,7 +29,7 @@ const ChangePassword = ({ navigation, route }) => {
         } else {
             try {
                 setLoading(true)
-                const { data } = await axios.put(`${URL}api/users/updatePassword/${id}`, { password })
+                const { data } = await axios.put(`http://localhost:5000/api/users/updatePassword/${id}`, { password })
                 setLoading(false)
                 navigation.goBack()
             } catch (error) {

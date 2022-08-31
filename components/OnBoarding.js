@@ -7,6 +7,7 @@ import BottomLeft from '../assets/Images/BottomLeft.png'
 import Right1 from '../assets/Images/Right1.png'
 import Right2 from '../assets/Images/Right2.png'
 import Right3 from '../assets/Images/Right3.png'
+import logoBlack from '../assets/Logo/logo-black.svg'
 
 const OnBoarding = ({ navigation }) => {
     const fade1 = useRef(new Animated.Value(0)).current
@@ -88,8 +89,12 @@ const OnBoarding = ({ navigation }) => {
     }, [])
 
     return (
-        <SafeAreaView style={{ flex: 1, position: 'relative', paddingLeft: 40, paddingRight: 40 }}>
-            <View style={styles.container}>
+        <SafeAreaView style={{ flex: 1, position: 'relative', paddingLeft: 40, paddingRight: 40, backgroundColor: '#FFEDD2' }}>
+            <Animated.View>
+                <Image source={logoBlack} style={styles.logoBlack}/>
+            </Animated.View>
+
+            {/* <View style={styles.container}>
                 <View style={styles.containerLeft}>
                     <Animated.View style={[styles.item, styles.item1, { opacity: fade1 }]}>
                         <Image style={{ flex: 1 }} source={TopLeft} />
@@ -119,7 +124,7 @@ const OnBoarding = ({ navigation }) => {
                         </Animated.View>
                     </View>
                 </View>
-            </View>
+            </View> */}
 
             <Animated.Text style={[styles.header, { opacity: fadeHeader }]}>FurryHope Mobile.</Animated.Text>
             <Animated.Text style={[styles.subHeader, { opacity: fadeSub }]}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia et rerum voluptate deserunt, aut dolorem!</Animated.Text>
@@ -220,4 +225,12 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontFamily: 'PoppinsBold',
     },
+
+    logoBlack: {
+        height: 220,
+        width: 220,
+        marginTop: 150,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+    }
 })

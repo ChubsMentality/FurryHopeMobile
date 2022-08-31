@@ -12,20 +12,31 @@ const EditProfile = ({ navigation, route }) => {
     const [email, setEmail] = useState('')
     const [contactNo, setContactNo] = useState('')
     const [address, setAddress] = useState('') 
+    const [street, setStreet] = useState('')
+    const [barangay, setBarangay] = useState('')
+    const [city, setCity] = useState('')
     const [profilePicture, setProfilePicture] = useState('')
+    const [isMarikinaCitizen, setIsMarikinaCitizen] = useState()
     const [preview, setPreview] = useState('')
 
     const [fNameFocused, setFNameFocused] = useState(false)
     const [emailFocused, setEmailFocused] = useState(false)
     const [contactNoFocused, setContactNoFocused] = useState(false)
     const [addressFocused, setAddressFocused] = useState(false)
-    
+    const [streetFocused, setStreetFocused] = useState(false)
+    const [barangayFocused, setBarangayFocused] = useState(false)
+    const [cityFocused, setCityFocused] = useState(false)
+
     const getUser = async () => {
-        const { data } = await axios.get(`${URL}api/users/getUserById/${id}`)
+        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${id}`)
         setFullName(data.fullName)
         setEmail(data.email)
         setContactNo(data.contactNo)
         setAddress(data.address)
+        setStreet(data.street)
+        setBarangay(data.barangay)
+        setCity(data.city)
+        setIsMarikinaCitizen(data.isMarikinaCitizen)
         setPreview(data.profilePicture)   
     }
 
@@ -68,17 +79,19 @@ const EditProfile = ({ navigation, route }) => {
     }
 
     const updateHandler = async () => {
+        // console.log(isMarikinaCitizen)
         try {
-            const { data } = await axios.put(`${URL}api/users/updateProfilePicture/${id}`, { profilePicture })
+            const { data } = await axios.put(`http://localhost:5000/api/users/updateProfilePicture/${id}`, { profilePicture })
         } catch (error) {
            console.log(error) 
         }
 
         try {
             setLoading(true)
-            const { data } = await axios.put(`${URL}api/users/updateUserProfile/${id}`, { fullName, email, contactNo, address })
+            const { data } = await axios.put(`http://localhost:5000/api/users/updateUserProfile/${id}`, { fullName, email, contactNo, address, street, barangay, city, isMarikinaCitizen })
             setLoading(false)
             navigation.navigate('My Profile')
+            alert(`Your changes has been saved.`)
         } catch (error) {
             console.log(error)
         }
@@ -87,6 +100,23 @@ const EditProfile = ({ navigation, route }) => {
     useEffect(() => {
         getUser()
     }, [])
+
+    useEffect(() => {
+        let lowered = city.split(" ")
+        let temp = lowered[0].toLowerCase()
+        console.log(temp)
+
+        if(temp === 'marikina') {
+            setIsMarikinaCitizen(true)
+        } else {
+            setIsMarikinaCitizen(false)
+        }
+
+        let tempAddress = `${street}, Brgy.${barangay}, ${city}, Philippines`
+        setAddress(tempAddress)
+
+        console.log(isMarikinaCitizen)
+    }, [street, city, address])
 
     return (
         <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
@@ -130,14 +160,40 @@ const EditProfile = ({ navigation, route }) => {
                     onBlur={() => setContactNoFocused(false)}
                 />
 
-                <Text style={styles.editLabel}>Address</Text>
+                <Text style={styles.addressHeader}>Address</Text>
+
+                <Text style={styles.editLabel}>Street</Text>
                 <TextInput
                     style={addressFocused ? styles.editInputFocused : styles.editInput}
-                    value={address}
-                    onChangeText={setAddress}
+                    value={street}
+                    onChangeText={setStreet}
                     onFocus={() => setAddressFocused(true)}
                     onBlur={() => setAddressFocused(false)}
                 />
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginRight: 35, marginLeft: 35, }}>
+                    <View style={styles.subAddressContainer}>
+                        <Text style={styles.subAddressLabel}>Barangay</Text>
+                        <TextInput
+                            style={barangayFocused ? styles.subAddressInputFocused : styles.subAddressInput}
+                            onFocus={() => setBarangayFocused(true)}
+                            onBlur={() => setBarangayFocused(false)}
+                            value={barangay}
+                            onChangeText={setBarangay}
+                        />
+                    </View>
+
+                    <View style={styles.subAddressContainer}>
+                        <Text style={styles.subAddressLabel}>City</Text>
+                        <TextInput
+                            style={cityFocused ? styles.subAddressInputFocused : styles.subAddressInput}
+                            onFocus={() => setCityFocused(true)}
+                            onBlur={() => setCityFocused(false)}
+                            value={city}
+                            onChangeText={setCity}
+                        />
+                    </View>
+                </View>
 
                 <TouchableOpacity style={styles.saveBtn} onPress={() => updateHandler()}>
                     {loading ?
@@ -221,16 +277,59 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
 
+    addressHeader: {
+        fontFamily: 'PoppinsSemiBold',
+        fontSize: 15,
+        marginLeft: 35,
+        marginTop: 20,
+        marginBottom: 11,
+    },
+
+    subAddressLabel: {
+        fontFamily: 'PoppinsRegular',
+        fontSize: 14.5,
+        marginBottom: 5,
+    },
+
+    subAddressInput: {
+        height: 46,
+        width: '82%',
+        borderColor: '#f1f3f7',
+        borderWidth: 3,
+        backgroundColor: '#f3f5f9',
+        color: '#8c8c8e',
+        marginBottom: 20,
+        fontFamily: 'PoppinsLight',
+        fontSize: 13,
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+
+    subAddressInputFocused: {
+        height: 46,
+        width: '82%',
+        borderColor: 'black',
+        borderWidth: 3,
+        backgroundColor: 'white',
+        color: '#8c8c8e',
+        marginBottom: 20,
+        fontFamily: 'PoppinsLight',
+        fontSize: 13,
+        paddingLeft: 10,
+        paddingRight: 10,
+        color: '#000',
+    },
+
     saveBtn: {
         height: 55,
         width: '80%',
         backgroundColor: '#111',
-        marginTop: 90,
+        marginTop: 45,
         marginRight: 35,
+        marginBottom: 30,
         marginLeft: 35,
         justifyContent: 'center',
         alignItems: 'center',
-
     },
 
     saveTxt: {

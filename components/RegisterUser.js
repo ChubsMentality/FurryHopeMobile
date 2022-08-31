@@ -17,9 +17,21 @@ const RegisterUser = ({ navigation }) => {
     const register = async () => {
         setLoading(true)
 
+        let address = ''
+        let isMarikinaCitizen
+        let lowered = city.split(" ")
+        let temp = lowered[0].toLowerCase()
+        
+        if(temp === 'marikina') {
+            isMarikinaCitizen = true
+        } else {
+            isMarikinaCitizen = false
+        }
+        address = `${street}, Brgy.${barangay}, ${city}, Philippines`
+        
         try {
             // async / await format 
-            const { data } = await axios.post(`${URL}api/users`, { fullName, email, contactNo, address, password, animalPreference, breedPreferences, colorPreferences, genderPreference, sizePreference }) 
+            const { data } = await axios.post(`http://localhost:5000/api/users`, { fullName, email, contactNo, address, street, barangay, city, isMarikinaCitizen, password, animalPreference, breedPreferences, colorPreferences, genderPreference, sizePreference }) 
             console.log(data)
             setLoading(false)
             navigation.dispatch(StackActions.replace('Verification', { User: data })) 
@@ -63,6 +75,9 @@ const RegisterUser = ({ navigation }) => {
     const [email, setEmail] = useState('')
     const [contactNo, setContactNo] = useState('')
     const [address, setAddress] = useState('')
+    const [street, setStreet] = useState('')
+    const [barangay, setBarangay] = useState('')
+    const [city, setCity] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [animalPreference, setAnimalPreference] = useState('')
@@ -70,7 +85,6 @@ const RegisterUser = ({ navigation }) => {
     const [colorPreferences, setColorPreferences] = useState([])
     const [genderPreference, setGenderPreference] = useState('')
     const [sizePreference, setSizePreference] = useState('')
-    console.log(address)
 
     const [fNameFocused, setFNameFocused] = useState(false)
     const [emailFocused, setEmailFocused] = useState(false)
@@ -78,6 +92,9 @@ const RegisterUser = ({ navigation }) => {
     const [addressFocused, setAddressFocused] = useState(false)
     const [pwdFocused, setPwdFocused] = useState(false)
     const [confirmPwdFocused, setConfirmPwdFocused] = useState(false)
+    const [streetFocused, setStreetFocused] = useState(false)
+    const [barangayFocused, setBarangayFocused] = useState(false)
+    const [cityFocused, setCityFocused] = useState(false)
 
     const [notAdopted, setNotAdopted] = useState()
     const [notAdoptedDogs, setNotAdoptedDogs] = useState()
@@ -98,7 +115,7 @@ const RegisterUser = ({ navigation }) => {
 
     const goToSecondStep = () => {
         // Using regex to create a strong password
-        if(!fullName || !email || !contactNo || !address || !password || !confirmPassword) {
+        if(!fullName || !email || !contactNo || !city || !barangay || !city || !password || !confirmPassword) {
             alert('Please fill out all the necessary fields.')
         } else if (password.search(/[0-9]/) === -1) { // Password should contain a number
             alert('Your password should contain one or more numbers')
@@ -172,7 +189,7 @@ const RegisterUser = ({ navigation }) => {
 
     const getAnimals = async () => {
         try {
-            const { data } = await axios.get(`${URL}api/animals`)
+            const { data } = await axios.get(`http://localhost:5000/api/animals`)
             setNotAdopted(data.filter(filterNotAdopted))
         } catch (error) {
             console.log(error)
@@ -181,7 +198,7 @@ const RegisterUser = ({ navigation }) => {
 
     const getDogs = async () => {
         try {
-            const { data } = await axios.get(`${URL}api/animals/getDogs`)
+            const { data } = await axios.get(`http://localhost:5000/api/animals/getDogs`)
             setNotAdoptedDogs(data)
         } catch (error) {
             console.log(error)
@@ -190,7 +207,7 @@ const RegisterUser = ({ navigation }) => {
 
     const getCats = async () => {
         try {
-            const { data } = await axios.get(`${URL}api/animals/getCats`)
+            const { data } = await axios.get(`http://localhost:5000/api/animals/getCats`)
             setNotAdoptedCats(data)
         } catch (error) {
             console.log(error)
@@ -352,14 +369,6 @@ const RegisterUser = ({ navigation }) => {
                             onBlur={() => setContactNoFocused(false)}
                         />
 
-                        <Text style={[styles.emailTxt, styles.labels]}>Address</Text>
-                        <TextInput 
-                            style={addressFocused ? styles.inputFocused : styles.input}
-                            value={address}
-                            onChangeText={setAddress} 
-                            onFocus={() => setAddressFocused(true)}
-                            onBlur={() => setAddressFocused(false)}
-                        />
 
                         <Text style={[styles.passwordTxt, styles.labels]}>Password</Text>
                         <TextInput 
@@ -380,6 +389,41 @@ const RegisterUser = ({ navigation }) => {
                             onFocus={() => setConfirmPwdFocused(true)}
                             onBlur={() => setConfirmPwdFocused(false)}
                         />
+
+                        <Text style={styles.addressHeader}>Address</Text>
+
+                        <Text style={[styles.emailTxt, styles.labels]}>Street</Text>
+                        <TextInput 
+                            style={addressFocused ? styles.inputFocused : styles.input}
+                            value={street}
+                            onChangeText={setStreet} 
+                            onFocus={() => setAddressFocused(true)}
+                            onBlur={() => setAddressFocused(false)}
+                        />
+
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginLeft: 40, marginRight: 40 }}>
+                            <View style={styles.subAddressContainer}>
+                                <Text style={styles.subAddressLabel}>Barangay</Text>
+                                <TextInput
+                                    style={barangayFocused ? styles.subAddressInputFocused : styles.subAddressInput}
+                                    onFocus={() => setBarangayFocused(true)}
+                                    onBlur={() => setBarangayFocused(false)}
+                                    value={barangay}
+                                    onChangeText={setBarangay}
+                                />
+                            </View>
+
+                            <View style={styles.subAddressContainer}>
+                                <Text style={styles.subAddressLabel}>City</Text>
+                                <TextInput
+                                    style={cityFocused ? styles.subAddressInputFocused : styles.subAddressInput}
+                                    onFocus={() => setCityFocused(true)}
+                                    onBlur={() => setCityFocused(false)}
+                                    value={city}
+                                    onChangeText={setCity}
+                                />
+                            </View>
+                        </View>
 
                         <TouchableOpacity style={styles.continueBtn} onPress={() => goToSecondStep()}>
                             {
@@ -557,7 +601,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         marginTop: 15,
-        marginBottom: 75,
+        marginBottom: 45,
         marginLeft: 38,
     },
 
@@ -580,7 +624,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 45,
         marginRight: 38,
-        marginBottom: 75,
+        marginBottom: 45,
         marginLeft: 38,
     },
 
@@ -608,14 +652,32 @@ const styles = StyleSheet.create({
     createAnAccount: {
         fontFamily: 'PoppinsSemiBold',
         fontSize: 15,
-        marginTop: 65,
+        marginTop: 45,
         marginLeft: 40,
+    },
+
+    addressHeader: {
+        fontFamily: 'PoppinsSemiBold',
+        fontSize: 15,
+        marginTop: 25,
+        marginBottom: 25,
+        marginLeft: 40,
+    },
+
+    subAddressContainer: {
+        marginTop: 5,
     },
 
     labels: {
         fontFamily: 'PoppinsRegular',
         fontSize: 14.5,
         marginLeft: 40,
+        marginBottom: 5,
+    },
+
+    subAddressLabel: {
+        fontFamily: 'PoppinsRegular',
+        fontSize: 14.5,
         marginBottom: 5,
     },
 
@@ -638,6 +700,35 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
 
+    subAddressInput: {
+        height: 46,
+        width: '82%',
+        borderColor: '#f1f3f7',
+        borderWidth: 3,
+        backgroundColor: '#f3f5f9',
+        color: '#8c8c8e',
+        marginBottom: 20,
+        fontFamily: 'PoppinsLight',
+        fontSize: 13,
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+
+    subAddressInputFocused: {
+        height: 46,
+        width: '82%',
+        borderColor: 'black',
+        borderWidth: 3,
+        backgroundColor: 'white',
+        color: '#8c8c8e',
+        marginBottom: 20,
+        fontFamily: 'PoppinsLight',
+        fontSize: 13,
+        paddingLeft: 10,
+        paddingRight: 10,
+        color: '#000',
+    },
+
     inputFocused: {
         height: 46,
         width: '80%',
@@ -651,6 +742,7 @@ const styles = StyleSheet.create({
         fontSize: 13,
         paddingLeft: 10,
         paddingRight: 10,
+        color: '#000',
     },
 
     continueBtn: {

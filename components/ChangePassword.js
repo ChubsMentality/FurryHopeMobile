@@ -116,9 +116,9 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
         borderRadius: 5,
-        borderColor: '#f1f3f7',
-        borderWidth: 3,
-        backgroundColor: '#f3f5f9',
+        borderColor: '#D4D7D8',
+        borderWidth: 1,
+        backgroundColor: '#F2F4F5',
     },
 
     pwdInputFocused: {
@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 1,
         borderColor: 'black',
+        color: '#111',
         marginLeft: 35,
         marginBottom: 20,
         backgroundColor: 'white',

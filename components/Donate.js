@@ -556,9 +556,9 @@ const styles = StyleSheet.create({
 
     input: {
         borderRadius: 5,
-        borderColor: '#f1f3f7',
-        borderWidth: 3,
-        backgroundColor: '#f3f5f9',
+        borderColor: '#D4D7D8',
+        borderWidth: 1,
+        backgroundColor: '#F2F4F5',
         color: '#8c8c8e',
         width: '82.5%',
         height: 45,
@@ -580,6 +580,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         width: '82.5%',
         height: 45,
+        color: '#111',
         fontFamily: 'PoppinsRegular',
         fontSize: 13,
         marginBottom: 20,

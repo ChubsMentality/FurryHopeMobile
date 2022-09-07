@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { Image, ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useState, useEffect, useContext } from 'react'
+import { Image, ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View, Pressable, useWindowDimensions } from 'react-native'
+import { CredentialsContext } from './CredentialsContext'
+import moment from 'moment'
 import axios from 'axios'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const ViewAnimalData = ({ navigation, route }) => {
+    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext)
     const [id, setId] = useState('')
     const [name, setName] = useState('');
     const [breed, setBreed] = useState('');
@@ -14,8 +18,15 @@ const ViewAnimalData = ({ navigation, route }) => {
     const [size, setSize] = useState('')
     const [adoptionStatus, setAdoptionStatus] = useState('');
     const [animalImg, setAnimalImg] = useState('');
-    const URL = 'https://furryhopebackend.herokuapp.com/'
     const [availUntil, setAvailUntil] = useState('')
+    const [user, setUser] = useState()
+    const [limit, setLimit] = useState()
+    const window = useWindowDimensions()
+
+    const current = moment().format('YYYY/MM/DD')
+    // console.log(current)
+    const added = moment(current).add(5, 'd').format('YYYY/MM/DD')
+    // console.log(added)
 
     const pendingAdoption = adoptionStatus === 'Pending'
     const adopted = adoptionStatus === 'Adopted'
@@ -43,12 +54,51 @@ const ViewAnimalData = ({ navigation, route }) => {
         }
     }
 
+    const getUser = async () => {
+        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+        setUser(data)
+        setLimit(data.limit)
+    }
+
+    const limitFormatted = limit && moment(limit).format('MMMM DD, YYYY')
+
+    if(limit > current) {
+        console.log(`You're not allowed to adopt yet`)
+    } else {
+        console.log(`You can adopt an animal.`)
+    }
+
     useEffect(() => {
         getDataById();
+        getUser()
     }, [animalId]);
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white', position: 'relative' }}>
+            {limit > current && 
+                <Pressable style={{
+                    width: window.width, 
+                    height: window.height, 
+                    backgroundColor: '#111',
+                    opacity: .5,
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    zIndex: 25
+                }}></Pressable>
+            }
+
+            {limit > current &&
+                <View style={styles.notCitizenModal}>
+                    <Text style={styles.notCitizenHeader}>You're not allowed to {'\n'}adopt yet.</Text>
+                    <Text style={styles.notCitizednSub}>The app limits users from adopting once they've adopted, you can adopt on {limitFormatted}</Text>
+
+                    <TouchableOpacity style={styles.redirectBtn} onPress={() => navigation.goBack()}>
+                        <Text style={styles.redirectTxt}>Back to the list of animals.</Text>
+                    </TouchableOpacity>
+                </View>
+            }
+
             <ImageBackground style={styles.animalImgBg} source={animalImg}>
                 <TouchableOpacity style={styles.returnBtn} onPress={() => navigation.goBack()}>
                     <Ionicons name='chevron-back' size={24} color='#111' />
@@ -148,6 +198,54 @@ const styles = StyleSheet.create({
         shadowOpacity: .1,
     },
 
+    notCitizenModal: {
+        height: 'auto',
+        width: 330,
+        backgroundColor: 'white',
+        borderRadius: 5,
+        position: 'absolute',
+        top: '35%',
+        left: '50%',
+        transform: [{
+            translateX: '-50%',
+            translateY: '-50%',
+        }],
+        zIndex: 30,
+    },
+
+    notCitizenHeader: {
+        fontFamily: 'PoppinsBold',
+        fontSize: 18,
+        textAlign: 'center',
+        marginTop: 30,
+        marginLeft: 20,
+        marginRight: 20,
+    },
+
+    notCitizednSub: {
+        textAlign: 'center',
+        fontSize: 17,
+        lineHeight: 28, 
+        marginTop: 5, 
+        marginLeft: 20,
+        marginRight: 20,
+    },
+
+    redirectBtn: {
+        height: 60,
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+        borderTopColor: '#b0b0b0',
+        borderTopWidth: 1,
+    },
+
+    redirectTxt: {
+        fontSize: 16,
+        fontFamily:'PoppinsSemiBold',
+    },
+
     nameBreedContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -230,7 +328,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 20,
         height: 60,
-        width: '88%',
+        width: '86%',
         borderRadius: 5,
         backgroundColor: '#111',
         justifyContent: 'center',
@@ -238,6 +336,26 @@ const styles = StyleSheet.create({
     },
 
     adoptTxt: {
+        color: 'white',
+        fontFamily: 'PoppinsSemiBold',
+        fontSize: 20,
+    },
+
+    disabledBtnContainer: {
+        position: 'absolute',
+        bottom: 20,
+    },
+
+    adoptDisabled: {
+        height: 60,
+        width: 350,
+        borderRadius: 5,
+        backgroundColor: '#111',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    adoptDisabledTxt: {
         color: 'white',
         fontFamily: 'PoppinsSemiBold',
         fontSize: 20,

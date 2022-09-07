@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { ActivityIndicator, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from 'react-native'
 import { CredentialsContext } from '../CredentialsContext'
+import moment from 'moment'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import * as DocumentPicker from 'expo-document-picker'
 import axios from 'axios'
@@ -37,15 +38,20 @@ const AdoptionForm = ({ route, navigation }) => {
     const [emailFocused, setEmailFocused] = useState(false)
     const [contactNoFocused, setContactNoFocused] = useState(false)
     const [addressFocused, setAddressFocused] = useState(false)
-    const [isCitizen, setIsCitizen] = useState(true)
-    const [regToPound, setRegToPound] = useState(true)
     const [tagNo, setTagNo] = useState('')
     const [lengthOfStayFocused, setLengthOfStayFocused] = useState(false)
+    const [tempLimit, setTempLimit] = useState()
 
     const applicationStatus = 'Pending'
 
     // update adoption status to 'Pending'
     const adoptionStatus = 'Pending'
+
+    
+    const current = moment().format('YYYY/MM/DD')
+    // console.log(current)
+    tempLimit && console.log(tempLimit)
+    let limit = tempLimit && moment(current).add(14, 'd').format('YYYY/MM/DD')
 
     const getAnimalById = async () => {
         const { data } = await axios.get(`http://localhost:5000/api/animals/${animalId}`)
@@ -67,6 +73,7 @@ const AdoptionForm = ({ route, navigation }) => {
         setAddress(data.address)
         setApplicantImg(data.profilePicture)
         setIsMarikinaCitizen(data.isMarikinaCitizen)
+        setTempLimit(data.limit)
     }
 
     const generateTagNo = () => {
@@ -150,6 +157,8 @@ const AdoptionForm = ({ route, navigation }) => {
         } else {
             if(isMarikinaCitizen) {
                 console.log('register and submit adoption')
+
+                // Submit Adoption
                 try {
                     let hasBeenInterviewed = false
                     let hasPaid = false
@@ -166,13 +175,22 @@ const AdoptionForm = ({ route, navigation }) => {
                     console.log(error)
                 }
     
+                // Update adoption status - of the animal
                 try {                
-                    const data = await axios.put(`http://localhost:5000/api/admins/updateAdoptionStatus/${animalId}`, { adoptionStatus })
+                    const { data } = await axios.put(`http://localhost:5000/api/admins/updateAdoptionStatus/${animalId}`, { adoptionStatus })
                     // console.log(data)
                 } catch (error) {
                     console.log(error)
                 }
-    
+
+                // Update user's limitation for adopting
+                try {   
+                    const { data } = await axios.put(`http://localhost:5000/api/users/updateLimitation/${storedCredentials.id}`, { limit })
+                } catch (error) {
+                    console.log(Error)
+                }
+                
+                // Submit animal registration
                 try {
                     const registrationType = 'New'
                     const registrationStatus = 'Pending'
@@ -217,12 +235,20 @@ const AdoptionForm = ({ route, navigation }) => {
                     console.log(error)
                     alert(error)
                 }
-    
+                
+                // Update animal's adoption status
                 try {                
                     const data = await axios.put(`http://localhost:5000/api/admins/updateAdoptionStatus/${animalId}`, { adoptionStatus })
                     // console.log(data)
                 } catch (error) {
                     console.log(error)
+                }
+
+                // Update user's limitation for adopting
+                try {   
+                    const { data } = await axios.put(`http://localhost:5000/api/users/updateLimitation/${storedCredentials.id}`, { limit })
+                } catch (error) {
+                    console.log(Error)
                 }
     
                 setLoading(false)
@@ -233,19 +259,13 @@ const AdoptionForm = ({ route, navigation }) => {
             }
         }
     }
-    
+
     useEffect(() => {
         setAdoptionReference(uuid.v4())
         getUserById()
         getAnimalById()
         generateTagNo()
     }, [animalId])
-
-    useEffect(() => {
-        if(!isCitizen) {
-            setRegToPound(false)
-        }
-    }, [isCitizen])
 
     return (
         <SafeAreaView style={styles.body}>

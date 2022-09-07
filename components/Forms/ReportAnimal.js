@@ -27,6 +27,8 @@ const ReportAnimal = () => {
     const [isCitizen, setIsCitizen] = useState()
     const [reports, setReports] = useState()
 
+    console.log(storedCredentials.token)
+
     const pickAnImage_Gallery = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -110,6 +112,13 @@ const ReportAnimal = () => {
     }
 
     const getReportsPerUser = async () => {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${storedCredentials.token}`
+            }
+        }
+
         const { data } = await axios.get(`http://localhost:5000/api/users/getReportsPerUser`, config)
         setReports(data)
         console.log(data)
@@ -374,9 +383,9 @@ const styles = StyleSheet.create({
         height: 45,
         width: '82.5%',
         borderRadius: 5,
-        borderColor: '#f1f3f7',
-        borderWidth: 3,
-        backgroundColor: '#f3f5f9',
+        borderColor: '#D4D7D8',
+        borderWidth: 1,
+        backgroundColor: '#F2F4F5',
         color: '#8c8c8e',
         fontFamily: 'PoppinsRegular',
         fontSize: 13,
@@ -394,6 +403,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 5,
         backgroundColor: 'white',
+        color: '#111',
         fontFamily: 'PoppinsRegular',
         fontSize: 13,
         marginRight: 35,
@@ -411,10 +421,10 @@ const styles = StyleSheet.create({
         marginBottom: 40,
         padding: 10,
         width: '82.5%',
-        borderColor: '#f1f3f7',
-        borderWidth: 3,
+        borderColor: '#D4D7D8',
+        borderWidth: 1,
         borderRadius: 5,
-        backgroundColor: '#f3f5f9',
+        backgroundColor: '#F2F4F5',
         color: '#8c8c8e',
     },
 
@@ -423,6 +433,7 @@ const styles = StyleSheet.create({
         marginLeft: 'auto',
         marginRight: 'auto',
         marginBottom: 40,
+        color: '#111',
         padding: 10,
         fontSize: 13,
         width: '82.5%',

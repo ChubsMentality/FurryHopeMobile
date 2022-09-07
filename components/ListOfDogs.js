@@ -32,8 +32,8 @@ const ListOfDogs = ({ navigation }) => {
     let cDate = d.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit', year: 'numeric' })
     let formatted = moment(cDate).format('YYYY/MM/DD')
 
-    console.log(cDate)
-    console.log(formatted)
+    // console.log(cDate)
+    // console.log(formatted)
 
     const filterAvail = (arr) => {
         let d = new Date()

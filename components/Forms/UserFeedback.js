@@ -77,7 +77,13 @@ const UserFeedback = () => {
     }, [])
 
     useEffect(() => {
-        if(rating === 1) {
+        if (rating === 0) {
+            setRating1(false)
+            setRating2(false)
+            setRating3(false)
+            setRating4(false)
+            setRating5(false)
+        } else if(rating === 1) {
             setRating1(true)
             setRating2(false)
             setRating3(false)
@@ -293,9 +299,9 @@ const styles = StyleSheet.create({
 
     feedbackInput: {
         borderRadius: 5,
-        borderColor: '#f1f3f7',
-        borderWidth: 3,
-        backgroundColor: '#f3f5f9',
+        borderColor: '#D4D7D8',
+        borderWidth: 1,
+        backgroundColor: '#F2F4F5',
         width: '82%',
         height: 43,
         fontFamily: 'PoppinsRegular',
@@ -310,6 +316,7 @@ const styles = StyleSheet.create({
         borderColor: '#111',
         borderWidth: 1,
         backgroundColor: 'white',
+        color: '#111',
         width: '82%',
         height: 43,
         fontFamily: 'PoppinsRegular',
@@ -322,9 +329,9 @@ const styles = StyleSheet.create({
 
     feedbackMessage: {
         borderRadius: 5,
-        borderColor: '#f1f3f7',
-        borderWidth: 3,
-        backgroundColor: '#f3f5f9',
+        borderColor: '#D4D7D8',
+        borderWidth: 1,
+        backgroundColor: '#F2F4F5',
         fontFamily: 'PoppinsRegular',
         fontSize: 12,
         marginBottom: 40,
@@ -341,6 +348,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         backgroundColor: '#ffff',
         fontFamily: 'PoppinsRegular',
+        color: '#111',
         fontSize: 12,
         marginBottom: 40,
         marginRight: 'auto',

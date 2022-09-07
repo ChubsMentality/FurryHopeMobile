@@ -31,7 +31,7 @@ const DrawerContainer = () => {
 
     return (
         <Drawer.Navigator
-            initialRouteName='Report an Animal'
+            initialRouteName='Browse'
             drawerContent={props => <CustomDrawer {...props} />}
             screenOptions={{
                 drawerLabelStyle: {

@@ -30,6 +30,9 @@ import ProfileSettings from './components/ProfileSettings'
 import OnBoarding from './components/OnBoarding'
 import ReVerification from './components/ReVerification'
 import ReVerify from './components/ReVerify';
+import SpecReport from './components/SpecReport';
+import UserAdoption from './components/UserAdoption';
+import UserPetReg from './components/UserPetReg';
 import 'react-native-gesture-handler'
 import { Platform } from 'react-native';
 
@@ -105,7 +108,6 @@ const App = () => {
   }, [])
   */
 
-  
   // To send push notifications.
   const sendNotif = async () => {
     await Notifications.scheduleNotificationAsync({
@@ -205,9 +207,6 @@ const App = () => {
           <NavigationContainer>
             <Stack.Navigator
               screenOptions={{
-                headerStyle: {
-                  fontFamily: 'PoppinsBold',
-                },
                 fontFamily: 'PoppinsBold',
                 headerTintColor: '#111',
               }}
@@ -218,6 +217,7 @@ const App = () => {
                   <Stack.Screen name='DrawerContainer' component={DrawerContainer} options={{ headerShown: false }} />
                   <Stack.Screen name='Dogs' component={ListOfDogs} options={{ headerShown: false }} />
                   <Stack.Screen name='Cats' component={ListOfCats} options={{ headerShown: false }} />
+                  <Stack.Screen name='Adoption Details' component={UserAdoption} options={{ headerShown: false }} />
                   <Stack.Screen name='Tips for Adopting' component={ThingsToConsider} />
                   <Stack.Screen name='Adoption Benefits' component={Benefits} />
                   <Stack.Screen name='Dog Care' component={DogCare} />
@@ -229,13 +229,15 @@ const App = () => {
                   <Stack.Screen name='Edit Profile' component={EditProfile} />
                   {/* <Stack.Screen name="Profile" component={Profile} /> */}
                   <Stack.Screen name='Change Password' component={ChangePassword} />
+                  <Stack.Screen name='Report Details' component={SpecReport} />
                   <Stack.Screen name='Profile Settings' component={ProfileSettings} options={{ headerShown: false }} />
+                  <Stack.Screen name='Pet Registration Details' component={UserPetReg} />
                 </Stack.Group>
               ) : (
                 // If not, only the login and register screens are available
                 <Stack.Group>
-                  <Stack.Screen name='Login' component={Login} options={{headerShown: false}} />
                   <Stack.Screen name='OnBoarding' component={OnBoarding} options={{headerShown: false}} />
+                  <Stack.Screen name='Login' component={Login} options={{headerShown: false}} />
                   <Stack.Screen name='Register' component={Register} options={{ headerShown: false }} />
                   <Stack.Screen name='Re-verify' component={ReVerify} options={{ headerShown: false }} />
                   <Stack.Screen name='Forgot Password' component={ForgotPassword} options={{headerShown: false }} />

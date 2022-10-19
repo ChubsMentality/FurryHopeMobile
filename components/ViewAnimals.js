@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { ActivityIndicator, FlatList, Image, ImageBackground, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useState, useEffect, useContext, useRef } from 'react'
+import { ActivityIndicator, Animated, FlatList, Image, ImageBackground, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { quickSort } from './SubComponents/QuickSort'
 import { CredentialsContext } from './CredentialsContext'
 import SuggestedCard from './SubComponents/SuggestedCard'
@@ -8,14 +8,12 @@ import BottomNav from './SubComponents/BottomNav'
 import EmptyList from '../assets/Images/empty-adoption-list.png'
 import catIllustration from '../assets/Images/catIllustration.png'
 import dogIllustration from '../assets/Images/dogIllustration.png'
-import TopNavAbsolute from './SubComponents/TopNavAbsolute'
+import logoBlack from '../assets/Logo/logo-black.png'
 import axios from 'axios'
-import { Video } from 'expo-av'
-import vid1 from '../assets/homeVideo.mp4'
-import vid2 from '../assets/Videos/homeVideo2.mp4'
-import vid3 from '../assets/Videos/homeVideo3.mp4'
-import vid4 from '../assets/Videos/vid4.mp4'
 import avatar from '../assets/Images/avatar-vector.png'
+import heroLeftMost from '../assets/Home/heroLeftMost.png'
+import heroUpperRight from '../assets/Home/dogs-container.png'
+import heroLowerMostRight from '../assets/Home/cat-container.png'
 
 const ViewAnimals = ({ navigation }) => {
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext)
@@ -25,6 +23,7 @@ const ViewAnimals = ({ navigation }) => {
     // const [currentTab, setCurrentTab] = useState('Browse')
     const [browseActive, setBrowseActive] = useState(true)
     // const [suggestedActive, setSuggestedActive] = useState(false)
+    const scrollX = useRef(new Animated.Value(0)).current
 
     const [animalPreferences, setAnimalPreferences] = useState()
     const [breedPreference, setBreedPreference] = useState()
@@ -38,9 +37,6 @@ const ViewAnimals = ({ navigation }) => {
     const [colorList, setColorList] = useState([])
     const [genderList, setGenderList] = useState([])
     const [sizeList, setSizeList] = useState([])
-
-    const vidArr = [vid1, vid2, vid3]
-    const [random, setRandom] = useState(0)
 
     const filterPreferences = async () => {
         let user = {}
@@ -211,23 +207,10 @@ const ViewAnimals = ({ navigation }) => {
         )
     }
 
-    useEffect(() => {
-        const selectRandom = () => {
-            let iterator = 0
-            let rand = Math.floor(Math.random() * vidArr.length)
-            setRandom(rand)
-            console.log(rand)
-        }
-
-        setTimeout(() => {
-           selectRandom() 
-        }, 60000);
-    }, [random])
-
     return (
         <SafeAreaView style={styles.body}>
             <ScrollView style={styles.flexContainer}>
-                {/* <View style={styles.topNavContainer}>
+                <View style={styles.topNavContainer}>
                     <TopNav ScreenName='Animals' color='#111' />
 
                     <View style={styles.toggleTabContainer}>
@@ -239,56 +222,47 @@ const ViewAnimals = ({ navigation }) => {
                             <Text style={browseActive ? styles.toggleTabTxt : styles.toggleTabTxtActive}>For You</Text>
                         </TouchableOpacity>
                     </View>
-                </View> */}
-
-                <TopNavAbsolute ScreenName='Browse' color='white' />
-                <Video
-                    style={styles.video} 
-                    source={vidArr[random]}
-                    resizeMode='cover'
-                    isLooping={true}
-                    shouldPlay
-                    isMuted
-                />
-
-                <View
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        height: 450,
-                        width: '100%',
-                        backgroundColor: '#111',
-                        opacity: .35,
-                    }}
-                >
                 </View>
 
-{/* top: 270 */}
-                <View style={{ position: 'absolute', top: 320, left: 0, }}> 
+
+                {/* <View style={{ position: 'absolute', top: 320, left: 0, }}> 
                     <Text style={styles.heading}>Hello {fName}</Text>
                     <Text style={styles.subHeading}>Make a new friend today</Text>
-                </View>
-
-                <View style={styles.toggleTabContainer}>
-                    <TouchableOpacity style={browseActive ? styles.toggleTabActive : styles.toggleTab} onPress={() => toggleBrowse()}>
-                        <Text style={browseActive ? styles.toggleTabTxtActive : styles.toggleTabTxt}>Browse</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={browseActive ? styles.toggleTab : styles.toggleTabActive} onPress={() => toggleSuggested()}>
-                        <Text style={browseActive ? styles.toggleTabTxt : styles.toggleTabTxtActive}>For You</Text>
-                    </TouchableOpacity>
-                </View>
+                </View> */}
 
                 <View style={styles.top_margin}></View>
 
+                <Text style={styles.screenHeading}>EXPLORE</Text>
+                <Text style={styles.screenSubHeading}>Find your new buddy</Text>
+
+                <View style={styles.heroSection}>
+                    <View style={styles.heroLeftMost}>
+                        <Image source={heroLeftMost} style={{ height: 200, width: 200, marginLeft: 30, }} />
+                    </View>
+
+                    <View style={styles.heroRight}>
+                        <View style={styles.heroUpperRight}>
+                            <Image source={heroUpperRight} style={{ height: 150, width: 160, marginTop: 40 }}/>
+                        </View>
+
+                        <View style={styles.heroLowerRight}>
+                            <Image source={avatar} style={styles.heroLowerMostLeft} />
+
+                            <View style={styles.heroLowerMostRight}>
+                                <Image source={heroLowerMostRight} style={{ height: 90, width: 100, marginTop: 15, marginLeft: 30 }} />
+                            </View>
+                        </View>
+                    </View>
+                </View>
+
                 {browseActive ?
                     <View>
-                        <View style={styles.testimonyContainer}>
+                        {/* <View style={styles.testimonyContainer}>
                             <Image source={avatar} style={styles.avatar}/>
                             <Text style={styles.testimonyHeader}>Save lives.</Text>
                             <Text style={styles.testimonySub}>Adopt one today.</Text>
-                        </View>
+                        </View> */}
+
 
                         <Text style={styles.categoryHeading}>Choose among our different animals</Text>
                         <TouchableOpacity style={styles.animalCategoryContainer} onPress={() => navigation.navigate('Dogs')}>
@@ -405,13 +379,9 @@ const ViewAnimals = ({ navigation }) => {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-        backgroundColor: '#ffffff',
+        // backgroundColor: '#f5f5f5',
+        backgroundColor: '#fff',
         position: 'relative',
-    },
-
-    video: {
-        height: 450,
-        width: '100%',
     },
 
     topNavContainer: {
@@ -422,6 +392,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 10,
+        backgroundColor: 'white',
     },
 
     toggleTabContainer: {
@@ -429,24 +400,96 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         // justifyContent: 'space-evenly',
         alignItems: 'center',
+        marginTop: 20,
+        marginBottom: 1,
         borderBottomColor: '#111',
-        height: 50,
     },
 
     toggleTab: {
         width: '50%',
-        height: '100%',
-        backgroundColor: '#FAFAFA',
-        justifyContent: 'center',
-        alignItems: 'center',
+        paddingBottom: 7,
     },
 
     toggleTabActive: {
         width: '50%',
-        height: '100%',
-        backgroundColor: '#111',
+        borderBottomColor: '#111',
+        borderBottomWidth: 2,
+        paddingBottom: 7,
+    },
+
+    toggleTabTxt: {
+        textAlign: 'center',
+    },
+
+    toggleTabTxtActive: {
+        fontFamily: 'PoppinsMedium',
+        textAlign: 'center',
+    },
+
+    screenHeading: {
+        fontFamily: 'PoppinsSemiBold',
+        fontSize: 20,
+        marginLeft: 30
+    },
+
+    screenSubHeading: {
+        fontFamily: 'PoppinsLight',
+        fontSize: 14,
+        marginTop: -3,
+        marginBottom: 10,
+        marginLeft: 30
+    },
+
+    heroSection: {
+        marginRight: 30,
+        marginLeft: 30,
+        flexDirection: 'row',
+        gap: 10,
+    },
+
+    heroLeftMost: {
+        height: 250,
+        width: 130,
+        backgroundColor: '#6bffb8',
+        borderRadius: 5,
+        overflow: 'hidden',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        zIndex: 5,
+    },
+    
+    heroRight: {
+        gap: 10,
+    },
+
+    heroUpperRight: {
+        width: 210,
+        height: 140,
+        backgroundColor: 'aqua',
+        borderRadius: 5,
+        overflow: 'hidden',
+        flexDirection: 'row',
+        justifyContent: 'flex-end'
+    },
+
+    heroLowerRight: {
+        flexDirection: 'row',
+        gap: 10
+    },
+
+    heroLowerMostLeft: {
+        height: 100,
+        width: 100,
+        borderRadius: 100,
+    },
+    heroLowerMostRight: {
+        height: 100,
+        width: 100,
+        backgroundColor: '#ffff66',
         justifyContent: 'center',
         alignItems: 'center',
+        borderRadius: 5,
+        overflow: 'hidden',
     },
 
     suggestedLabel: {
@@ -468,19 +511,6 @@ const styles = StyleSheet.create({
         gap: 12,
         marginLeft: 30,
         marginBottom: 12,
-    },
-
-    toggleTabTxt: {
-        textAlign: 'center',
-        fontSize: 18,
-        color: '#A1A1AA',
-    },
-
-    toggleTabTxtActive: {
-        fontFamily: 'PoppinsMedium',
-        textAlign: 'center',
-        fontSize: 18,
-        color: 'white'
     },
 
     top_margin: {

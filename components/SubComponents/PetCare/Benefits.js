@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Video, AVPlaybackStatus } from 'expo-av'
 import { benefit1, benefit2, benefit3 } from '../AnimalCareSubComp'
 import Ionicons from 'react-native-vector-icons/Ionicons' // md-paw-sharp, md-paw-outline
 

@@ -6,13 +6,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import * as DocumentPicker from 'expo-document-picker'
 import axios from 'axios'
 import uuid from 'react-native-uuid'
+import { useNavigation } from '@react-navigation/native'
 
-const AdoptionForm = ({ route, navigation }) => {
+const AdoptionForm = ({ route }) => {
     const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext)
     const d = new Date()
+    const navigation = useNavigation()
     const URL = 'https://furryhopebackend.herokuapp.com/'
     const { animalId } = route.params
-    console.log(animalId)
 
     const [name, setName] = useState('')
     const [applicantName, setApplicantName] = useState('')
@@ -41,17 +42,10 @@ const AdoptionForm = ({ route, navigation }) => {
     const [tagNo, setTagNo] = useState('')
     const [lengthOfStayFocused, setLengthOfStayFocused] = useState(false)
     const [tempLimit, setTempLimit] = useState()
-
     const applicationStatus = 'Pending'
 
     // update adoption status to 'Pending'
     const adoptionStatus = 'Pending'
-
-    
-    const current = moment().format('YYYY/MM/DD')
-    // console.log(current)
-    tempLimit && console.log(tempLimit)
-    let limit = tempLimit && moment(current).add(14, 'd').format('YYYY/MM/DD')
 
     const getAnimalById = async () => {
         const { data } = await axios.get(`http://localhost:5000/api/animals/${animalId}`)
@@ -61,7 +55,7 @@ const AdoptionForm = ({ route, navigation }) => {
         setAnimalGender(data.gender)
         setAnimalColor(data.color)
         setAnimalImg(data.animalImg)
-
+        setTagNo(data.tagNo)
     }
 
     const getUserById = async () => {
@@ -76,16 +70,28 @@ const AdoptionForm = ({ route, navigation }) => {
         setTempLimit(data.limit)
     }
 
-    const generateTagNo = () => {
-        let tagNo = ''
+    // const generateTagNo = () => {
+    //     let tagNo = ''
+    //     let secondHalf = ''
+    //     const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
-        for (let i = 0; i <= 3; i++) {
-            const randomNum = Math.round(Math.random() * 9)
-            tagNo += randomNum
-        }
+    //     let rand1 = Math.round(Math.random() * letters.length)
+    //     let rand2 = Math.round(Math.random() * letters.length)
+    //     let rand3 = Math.round(Math.random() * letters.length)
 
-        setTagNo(tagNo)
-    }
+    //     let firstLetter = letters[rand1]
+    //     let secondLetter = letters[rand2]
+    //     let thirdLetter = letters[rand3]
+    //     let firstHalf = `${firstLetter}${secondLetter}${thirdLetter}`
+
+    //     for (let i = 0; i <= 3; i++) {
+    //         const randomNum = Math.round(Math.random() * 9)
+    //         secondHalf += randomNum
+    //     }
+        
+    //     tagNo = `${firstHalf} ${secondHalf}`
+    //     setTagNo(tagNo)
+    // }
 
     const pickDocument = async () => {
         let result = await DocumentPicker.getDocumentAsync({ type: '*/*', copyToCacheDirectory: true, base64: true})
@@ -155,8 +161,30 @@ const AdoptionForm = ({ route, navigation }) => {
             setLoading(false)
             return 
         } else {
+            const current = moment().format('YYYY/MM/DD')
+            var limit = moment(current).add(14, 'd').format('YYYY/MM/DD')
             if(isMarikinaCitizen) {
-                console.log('register and submit adoption')
+                // Submit animal registration
+                try {
+                    const registrationType = 'New'
+                    const registrationStatus = 'Pending'
+                    const isFromAdoption = true
+                    const regFeeComplete = false
+                    const certOfResidencyComplete = false
+                    const ownerPictureComplete = false
+                    const petPhotoComplete = false
+                    const proofOfAntiRabiesComplete = false
+                    const photocopyCertOfAntiRabiesComplete = false
+
+                    const { data } = await axios.post(`http://localhost:5000/api/users/registerAnimal`, {
+                        animalType, registrationType, applicantImg, name, contactNo, lengthOfStay, address,
+                        animalName, animalBreed, animalAge, animalColor, animalGender, tagNo, date, registrationStatus, email, adoptionReference, isFromAdoption,
+                        regFeeComplete, certOfResidencyComplete, ownerPictureComplete, petPhotoComplete, proofOfAntiRabiesComplete, photocopyCertOfAntiRabiesComplete,
+                    }, config)
+                    console.log(data)
+                } catch (error) {
+                    console.log(error)
+                }
 
                 // Submit Adoption
                 try {
@@ -190,36 +218,15 @@ const AdoptionForm = ({ route, navigation }) => {
                     console.log(Error)
                 }
                 
-                // Submit animal registration
-                try {
-                    const registrationType = 'New'
-                    const registrationStatus = 'Pending'
-                    const isFromAdoption = true
-                    const regFeeComplete = false
-                    const certOfResidencyComplete = false
-                    const ownerPictureComplete = false
-                    const petPhotoComplete = false
-                    const proofOfAntiRabiesComplete = false
-                    const photocopyCertOfAntiRabiesComplete = false
-
-                    const { data } = await axios.post(`http://localhost:5000/api/users/registerAnimal`, {
-                        animalType, registrationType, applicantImg, name, contactNo, lengthOfStay, address,
-                        animalName, animalBreed, animalAge, animalColor, animalGender, tagNo, date, registrationStatus, email, adoptionReference, isFromAdoption,
-                        regFeeComplete, certOfResidencyComplete, ownerPictureComplete, petPhotoComplete, proofOfAntiRabiesComplete, photocopyCertOfAntiRabiesComplete,
-                    }, config)
-                    console.log(data)
-                } catch (error) {
-                    console.log(error)
-                }
-    
-                setLoading(false)
-            
                 setTimeout(() => {
                     navigation.navigate('Browse')
                 }, 500)
+
+                setLoading(false)
+            
             } else {
-                console.log('submit adoption')
                 alert('Successfully submitted, check your profile to see your adoptions.')
+                
                 try {
                     let hasBeenInterviewed = false
                     let hasPaid = false
@@ -250,12 +257,13 @@ const AdoptionForm = ({ route, navigation }) => {
                 } catch (error) {
                     console.log(Error)
                 }
-    
-                setLoading(false)
-            
+
                 setTimeout(() => {
                     navigation.navigate('Browse')
                 }, 500)
+                
+                setLoading(false)
+            
             }
         }
     }

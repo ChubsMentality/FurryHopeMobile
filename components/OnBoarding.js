@@ -1,139 +1,150 @@
 import React, { useEffect, useRef } from 'react'
 import { Animated, Easing, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View, SafeAreaView } from 'react-native'
-import OnBoardingJpg from '../assets/Images/onBoarding.jpg'
-import TopLeft from '../assets/Images/TopLeft.png'
-import MidLeft from '../assets/Images/MidLeft.png'
-import BottomLeft from '../assets/Images/BottomLeft.png'
-import Right1 from '../assets/Images/Right1.png'
-import Right2 from '../assets/Images/Right2.png'
-import Right3 from '../assets/Images/Right3.png'
+import { StackActions } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome5'
+import Feather from 'react-native-vector-icons/Feather'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import logoBlack from '../assets/Logo/logo-black.svg'
+import UpdatedLogo from '../assets/Logo/refined-logo.png'
+import OnBoardingImg from '../assets/Images/onBoarding.png'
 
-const OnBoarding = ({ navigation }) => {
-    const fade1 = useRef(new Animated.Value(0)).current
-    const fade2 = useRef(new Animated.Value(0)).current
-    const fade3 = useRef(new Animated.Value(0)).current
-    const fade4 = useRef(new Animated.Value(0)).current
-    const fade5 = useRef(new Animated.Value(0)).current
-    const fade6 = useRef(new Animated.Value(0)).current
-    const fadeHeader = useRef(new Animated.Value(0)).current
-    const fadeSub = useRef(new Animated.Value(0)).current
-    const fadeBtn = useRef(new Animated.Value(0)).current
+const OnBoarding = () => {
+    const navigation = useNavigation()
+    const bgOpacity = useRef(new Animated.Value(0)).current
+    const txtHead1 = useRef(new Animated.Value(0)).current
+    const txtHead2 = useRef(new Animated.Value(0)).current
+    const txtSubHead = useRef(new Animated.Value(0)).current
+    const getStartedBtn = useRef(new Animated.Value(0)).current
+    const getStartedBtnIcon = useRef(new Animated.Value(0)).current
+    const getStartedTxt = useRef(new Animated.Value(0)).current
 
-    const fadeHandler = () => {
-        Animated.parallel([
-            Animated.timing(fadeHeader, {
+    const animate = () => {
+        Animated.sequence([
+            Animated.timing(bgOpacity, {
                 toValue: 1,
+                duration: 600,
                 easing: Easing.in,
-                delay: 1000,
-                useNativeDriver: true
+                useNativeDriver: true,
             }),
-            Animated.timing(fadeSub, {
-                toValue: 1,
-                easing: Easing.in,
-                delay: 1200,
-                useNativeDriver: true
-            }),
-            Animated.timing(fadeBtn, {
-                toValue: 1,
-                easing: Easing.in,
-                delay: 1800,
-                useNativeDriver: true
-            }),
-        ]).start()
-    }
-
-    const fadeImages = () => {
-        Animated.parallel([
-                Animated.stagger(300, [
-                Animated.timing(fade1, {
+            Animated.parallel([
+                Animated.timing(txtHead1, {
                     toValue: 1,
-                    easing: Easing.in,
                     useNativeDriver: true
                 }),
-                Animated.timing(fade2, {
+                Animated.timing(txtHead2, {
                     toValue: 1,
-                    easing: Easing.in,
-                    useNativeDriver: true
+                    delay: 150,
+                    useNativeDriver: true,
                 }),
-                Animated.timing(fade3, {
+                Animated.timing(txtSubHead, {
                     toValue: 1,
-                    easing: Easing.in,
-                    useNativeDriver: true
+                    delay: 250,
+                    useNativeDriver: true,
                 }),
             ]),
-    
-            Animated.stagger(250, [
-                Animated.timing(fade6, {
+            Animated.timing(getStartedBtn, {
+                toValue: 1,
+                easing: Easing.in,
+                useNativeDriver: true
+            }),
+            Animated.parallel([
+                Animated.timing(getStartedBtnIcon, {
                     toValue: 1,
                     easing: Easing.in,
                     useNativeDriver: true
                 }),
-                Animated.timing(fade5, {
+                Animated.timing(getStartedTxt, {
                     toValue: 1,
                     easing: Easing.in,
                     useNativeDriver: true
-                }),
-                Animated.timing(fade4, {
-                    toValue: 1,
-                    easing: Easing.in,
-                    useNativeDriver: true
-                }),
-            ])
+                })
+            ])               
         ]).start()
     }
 
     useEffect(() => {
-        fadeImages()
-        fadeHandler()
+        animate()
     }, [])
 
     return (
-        <SafeAreaView style={{ flex: 1, position: 'relative', paddingLeft: 40, paddingRight: 40, backgroundColor: '#FFEDD2' }}>
-            <Animated.View>
-                <Image source={logoBlack} style={styles.logoBlack}/>
-            </Animated.View>
+        <SafeAreaView style={{ flex: 1, position: 'relative' }}>
+            <Animated.Image source={OnBoardingImg} style={[ styles.bgImg, { opacity: bgOpacity } ]} />
+            
+            <Animated.Text 
+                style={[
+                    styles.txtHead, 
+                    { 
+                        opacity: txtHead1, 
+                        marginTop: 460,
+                        transform: [{
+                            translateY: txtHead1.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [-70, 0]
+                            })}
+                        ],
+                    }
+                ]}>Discover
+            </Animated.Text>
 
-            {/* <View style={styles.container}>
-                <View style={styles.containerLeft}>
-                    <Animated.View style={[styles.item, styles.item1, { opacity: fade1 }]}>
-                        <Image style={{ flex: 1 }} source={TopLeft} />
+            <Animated.Text 
+                style={[
+                    styles.txtHead, 
+                    { 
+                        color: '#ffff66',
+                        marginTop: -22,
+                        opacity: txtHead2,
+                        transform: [{
+                            translateY: txtHead2.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [-70, 0]
+                            })}
+                        ],
+                    }
+                ]}>COMPANIONS
+            </Animated.Text>
+            
+            <Animated.Text 
+                style={[ 
+                    styles.txtSubHead,
+                    { 
+                        opacity: txtSubHead,
+                        transform: [{
+                            translateY: txtSubHead.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [30, 0]
+                            })
+                        }] 
+                    }
+                ]}>Adopt <Text style={{ color: '#ffff66' }}>Now</Text>
+                </Animated.Text>
+
+            <TouchableOpacity style={{ alignSelf: 'flex-start', marginRight: 'auto', marginLeft: 'auto', zIndex: 5 }} onPress={() => navigation.dispatch(StackActions.push('Login'))}>
+                <Animated.View 
+                    style={[
+                        styles.getStartedBtn,
+                        {
+                            opacity: getStartedBtn,
+                            transform: [{
+                                translateY: getStartedBtn.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: [30, 0]
+                                }),
+                                scale: getStartedBtn.interpolate({
+                                    inputRange: [0, 0.5, 1],
+                                    outputRange: [.5, 10, 1]
+                                })
+                            }]
+                        }
+                    ]}>
+                    <Animated.View style={{ opacity: getStartedBtnIcon }}>
+                        <Feather name='arrow-right' color='#111' size={25} />
                     </Animated.View>
+                </Animated.View>
+            </TouchableOpacity>
 
-                    <Animated.View style={[styles.item, styles.item2, { opacity: fade2, }]}>
-                        <Image style={{ flex: 1 }} source={MidLeft} />
-                    </Animated.View>
-
-                    <Animated.View style={[styles.item, styles.item3, { opacity: fade3, }]}>
-                        <Image style={{ flex: 1 }} source={BottomLeft} />
-                    </Animated.View>
-                </View>
-
-                <View style={styles.containerRight}>
-                    <Animated.View style={[styles.item, styles.item4, { opacity: fade4, }]}>
-                        <Image style={{ flex: 1 }} source={Right1} />
-                    </Animated.View>
-
-                    <View style={styles.cRightSubContainer}>
-                        <Animated.View style={[styles.item, styles.item5, { opacity: fade5, }]}>
-                            <Image style={{ flex: 1 }} source={Right2} />
-                        </Animated.View>
-
-                        <Animated.View style={[styles.item, styles.item6, { opacity: fade6, }]}>
-                            <Image style={{ flex: 1 }} source={Right3} />
-                        </Animated.View>
-                    </View>
-                </View>
-            </View> */}
-
-            <Animated.Text style={[styles.header, { opacity: fadeHeader }]}>FurryHope Mobile.</Animated.Text>
-            <Animated.Text style={[styles.subHeader, { opacity: fadeSub }]}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia et rerum voluptate deserunt, aut dolorem!</Animated.Text>
-
-            <Animated.View style={{ opacity: fadeBtn }}>
-                <TouchableOpacity style={styles.getStartedBtn} onPress={() => navigation.navigate('Login')}>
-                    <Text style={styles.getStartedTxt}>GET STARTED</Text>
-                </TouchableOpacity>
-            </Animated.View>
+            <Animated.Text style={[styles.getStartedTxt, { opacity: getStartedTxt }]}>Get Started</Animated.Text>
         </SafeAreaView>
     )
 }
@@ -141,96 +152,49 @@ const OnBoarding = ({ navigation }) => {
 export default OnBoarding
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 50,
-        marginBottom: 35,
+    bgImg: {
+        position: 'absolute',
+        zIndex: 1,
+        height: '100%',
+        width: '100%',
     },
 
-    containerLeft: {
-        gap: 8,
+    txtHead: {
+        fontFamily: 'PoppinsBold',
+        fontSize: 53,
+        textAlign: 'center',
+        // opacity: .55,
+        color: 'white',
+        zIndex: 5
     },
 
-    containerRight: {
-        gap: 5,
-    },
-
-    cRightSubContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-
-    item: {
-        // height: 30,
-        // width: 30,
-        // backgroundColor: '#b0b0b0',
-        borderRadius: 5,
-    },
-
-    item1: {
-        height: 72,
-        width: 145,
-    },
-
-    item2: {
-        height: 143,
-        width: 145,
-    },
-
-    item3: {
-        height: 114,
-        width: 145,
-    },
-
-    item4: {
-        height: 172,
-        width: 177,
-    },
-
-    item5: {
-        height: 168,
-        width: 42,
+    txtSubHead: {
+        color: 'white',
+        fontFamily: 'PoppinsLight',
+        fontSize: 20,
+        textAlign: 'center',
+        opacity: .75,
+        zIndex: 5
     },
     
-    item6: {
-        height: 168,
-        width: 127,
-    },
-
-    header: {
-        fontFamily: 'PoppinsSemiBold',
-        fontSize: 40,
-        lineHeight: 45
-    },
-
-    subHeader: {
-        fontFamily: 'PoppinsExtraLight',
-        fontSize: 19,
-        marginTop: 10,
-    },
-
     getStartedBtn: {
-        height: 60,
-        backgroundColor: '#111',
-        with: '100%',
+        height: 50,
+        width: 50,
+        backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 5,
-        marginTop: 80,
+        borderRadius: 100,
+        marginTop: 60,
+        marginRight: 'auto',
+        marginLeft: 'auto',
     },
 
     getStartedTxt: {
+        fontFamily: 'PoppinsExtraLight',
+        fontSize: 12,
+        textAlign: 'center',
         color: 'white',
-        fontSize: 20,
-        fontFamily: 'PoppinsBold',
+        marginTop: 10,
+        zIndex: 5
     },
-
-    logoBlack: {
-        height: 220,
-        width: 220,
-        marginTop: 150,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-    }
 })

@@ -23,11 +23,10 @@ const ReportAnimal = () => {
     const [img, setImg] = useState('http://res.cloudinary.com/drvd7jh0b/image/upload/v1640256598/hyr5slabmcd9zf8xddrv.png')
     const [image, setImage] = useState('http://res.cloudinary.com/drvd7jh0b/image/upload/v1640256598/hyr5slabmcd9zf8xddrv.png')
     const [userToken, setUserToken] = useState('')
+    const [userEmail, setUserEmail] = useState('')
     const [toggleActive, setToggleActive] = useState('Submit')
     const [isCitizen, setIsCitizen] = useState()
     const [reports, setReports] = useState()
-
-    console.log(storedCredentials.token)
 
     const pickAnImage_Gallery = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -69,7 +68,6 @@ const ReportAnimal = () => {
 
     const config = {
         headers: {
-            'Content-Type': 'application/json',
             Authorization: `Bearer ${storedCredentials.token}`
         }
     }
@@ -102,19 +100,17 @@ const ReportAnimal = () => {
 
     const toggleList = () => {
         setToggleActive('List')
-        console.log('list')
     }
 
     const getUserById = async () => {
         const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
-        console.log(data)
         setIsCitizen(data.isMarikinaCitizen)
+        setUserEmail(data.email)
     }
 
     const getReportsPerUser = async () => {
         const config = {
             headers: {
-                'Content-Type': 'application/json',
                 Authorization: `Bearer ${storedCredentials.token}`
             }
         }
@@ -139,8 +135,7 @@ const ReportAnimal = () => {
             alert('Please enter the necessary information')
         } else {
             try {
-                const { data } = await axios.post(`http://localhost:5000/api/users/report`, { date, location, description, image, userToken }, config)
-                console.log(data)
+                const { data } = await axios.post(`http://localhost:5000/api/users/report`, { date, location, description, image, userToken, userEmail }, config)
                 alert('Thank you for notifying us.')
 
                 setLocation('')
@@ -247,24 +242,26 @@ const ReportAnimal = () => {
                 }
 
                 {toggleActive === 'List' &&
-                    <ScrollView style={styles.listOfReportsScroll}>
-                        {reports ?
-                            reports.map((report) => (
-                                <TouchableOpacity style={styles.reportContainer} key={report._id}>
-                                    <View style={styles.reportDetails}>
-                                        <Text style={styles.dateSubmitted}>Date Submitted: <Text style={styles.reportValue}>{report.date}</Text></Text>
-                                        <Text style={styles.reportId}>ID: <Text style={styles.reportValue}>{report._id}</Text></Text>
-                                    </View>
+                    <View style={{ height: 335 }}>
+                        <ScrollView style={styles.listOfReportsScroll}>
+                            {reports ?
+                                reports.map((report) => (
+                                    <TouchableOpacity style={styles.reportContainer} key={report._id} onPress={() => navigation.navigate('Report Details', { id: report._id })}>
+                                        <View style={styles.reportDetails}>
+                                            <Text style={styles.dateSubmitted}>Date Submitted: <Text style={styles.reportValue}>{report.date}</Text></Text>
+                                            <Text style={styles.reportId}>ID: <Text style={styles.reportValue}>{report._id}</Text></Text>
+                                        </View>
 
-                                    <View style={styles.reportStatusContainer}>
-                                        <Text style={styles.reportTxt}>{report.animalStatus}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            ))
-                            :
-                            <Text>NO REPORTS</Text>
-                        }
-                    </ScrollView>
+                                        <View style={styles.reportStatusContainer}>
+                                            <Text style={styles.reportTxt}>{report.animalStatus}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                ))
+                                :
+                                <Text>NO REPORTS</Text>
+                            }
+                        </ScrollView>
+                    </View>
                 }
             </ScrollView>
 
@@ -537,7 +534,7 @@ const styles = StyleSheet.create({
     },
 
     listOfReportsScroll: {
-        height: 335,
+        // height: 335,
         width: '100%',
     },
 

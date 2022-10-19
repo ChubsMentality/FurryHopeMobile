@@ -119,7 +119,7 @@ const RegisterAnimal = ({ navigation }) => {
 
                 const { data } = await axios.post(`http://localhost:5000/api/users/registerAnimal`, {
                     animalType, registrationType, applicantImg, name, contactNo, lengthOfStay, address,
-                    animalName, animalBreed, animalAge, animalColor, animalGender, date, registrationStatus, email, adoptionReference, isFromAdoption,
+                    animalName, animalBreed, animalAge, animalColor, animalGender, tagNo, date, registrationStatus, email, adoptionReference, isFromAdoption,
                     regFeeComplete, certOfResidencyComplete, ownerPictureComplete, petPhotoComplete, proofOfAntiRabiesComplete,
                     photocopyCertOfAntiRabiesComplete
                 }, config)
@@ -150,9 +150,32 @@ const RegisterAnimal = ({ navigation }) => {
         setIsCitizen(data.isMarikinaCitizen)
     } 
 
+    const generateTagNo = () => {
+        let tagNo = ''
+        let secondHalf = ''
+        const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+
+        let rand1 = Math.round(Math.random() * letters.length)
+        let rand2 = Math.round(Math.random() * letters.length)
+        let rand3 = Math.round(Math.random() * letters.length)
+
+        let firstLetter = letters[rand1]
+        let secondLetter = letters[rand2]
+        let thirdLetter = letters[rand3]
+        let firstHalf = `${firstLetter}${secondLetter}${thirdLetter}`
+
+        for (let i = 0; i <= 3; i++) {
+            const randomNum = Math.round(Math.random() * 9)
+            secondHalf += randomNum
+        }
+        
+        tagNo = `${firstHalf} ${secondHalf}`
+        setTagNo(tagNo)
+    }
+
     useEffect(() => {
         getUser()
-
+        generateTagNo()
         setApplicantImg(storedCredentials.profilePicture)
         setName(storedCredentials.fullName)
         setEmail(storedCredentials.email)
@@ -163,8 +186,6 @@ const RegisterAnimal = ({ navigation }) => {
         setDate(d.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit', year: 'numeric' }))
     }, [])
 
-    isCitizen && console.log(isCitizen === false ? 'false' : 'true')
-    
     return (
         <SafeAreaView style={styles.body}>
             {isCitizen || 

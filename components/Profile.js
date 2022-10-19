@@ -8,6 +8,7 @@ import BottomNav from './SubComponents/BottomNav'
 import TopNav from './SubComponents/TopNav'
 import axios from 'axios'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import EmptyPng from '../assets/Images/emptyProfList.png'
 
 const Profile = () => {
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext)
@@ -15,6 +16,7 @@ const Profile = () => {
     const window = useWindowDimensions()
     const navigation = useNavigation()
     const URL = 'https://furryhopebackend.herokuapp.com/'
+    console.log(storedCredentials.token)
 
     const [adoptions, setAdoptions] = useState()
     const [registrations, setRegistrations] = useState()
@@ -31,6 +33,7 @@ const Profile = () => {
             const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
             setUserData(data)
             setProfilePicturePreview(data.profilePicture)
+            console.log(data)
             console.log(data.profilePicture)
         } catch (error) {
             console.log(error)
@@ -46,7 +49,6 @@ const Profile = () => {
     const myAdoptions = async () => {
         try {
             const { data } = await axios.get(`http://localhost:5000/api/users/getSpecificAdoptions`, config)
-            console.log(data)
             setAdoptions(quickSort(data, 0, data.length - 1))
         } catch (error) {
             console.log(error)
@@ -57,7 +59,6 @@ const Profile = () => {
         try {
             const { data } = await axios.get(`http://localhost:5000/api/users/getSpecificRegistrations`, config)
             setRegistrations(quickSort(data, 0, data.length - 1))
-            console.log(data)
         } catch (error) {
             console.log(error)
         }
@@ -101,7 +102,7 @@ const Profile = () => {
 
     const AdoptListItem = ({ item }) => {
         return (
-            <View style={styles.adoptionListContainer} key={item._id}>
+            <TouchableOpacity style={styles.adoptionListContainer} key={item._id} onPress={() => navigation.navigate('Adoption Details', { id: item._id })}>
                 <View style={styles.adoptionListLeft}>
                     <Image source={item.animalImg} style={styles.animalImg} />
 
@@ -122,20 +123,28 @@ const Profile = () => {
                 {item.applicationStatus === 'Rejected' &&
                     <Text style={styles.rejected}>{item.adoptionStatus}</Text>
                 }
-            </View>
+
+                {item.applicationStatus === 'Cancelled' &&
+                    <Text style={styles.rejected}>{item.adoptionStatus}</Text>
+                }
+            </TouchableOpacity>
         )
     }
 
     const RegistrationListItem = ({ item }) => {
         return (
-            <View style={styles.adoptionListContainer} key={item._id}>
+            <TouchableOpacity style={styles.adoptionListContainer} key={item._id} onPress={() => navigation.navigate('Pet Registration Details', { id: item._id })}>
                 <View style={styles.adoptionListLeft}>
-                    <Image source={item.animalImg} style={styles.animalImg} />
-
                     <View style={styles.adoptionInfo}>
                         <Text style={styles.animalName}>{item.animalName}</Text>
                         <Text style={styles.animalBreed}>{item.animalBreed}</Text>
                     </View>
+                    {/* <View style={[styles.adoptionInfo, { borderLeftColor: '#b0b0b0', borderLeftWidth: 1 }]}>
+                        <Text style={styles.animalName}>Date Submitted</Text>
+                        <Text style={styles.animalBreed}>{item.date}</Text>
+
+
+                    </View> */}
                 </View>
 
                 {item.registrationStatus === 'Pending' &&
@@ -149,13 +158,20 @@ const Profile = () => {
                 {item.adoptionStatus === 'Not Registered' &&
                     <Text style={styles.rejected}>{item.registrationStatus}</Text>
                 }
-            </View>
+            </TouchableOpacity>
         )
     }
 
     const emptyList = () => {
         return (
-            <Text>Empty List</Text>
+            <Text style={{ 
+                fontFamily: 'PoppinsLight',
+                fontSize: 26,
+                marginTop: 50,
+                textAlign: 'center',
+            }}>
+                There's currently {'\n'}no animals in this list...
+            </Text>
         )
     }
 
@@ -167,20 +183,23 @@ const Profile = () => {
                     
                     <View style={styles.profileVector}></View>
                     <View style={styles.profileVector2}></View>
-                    <Text style={styles.userName}>{userData && userData.fullName}</Text>
+
+                    <View style={styles.profileBtnsContainer}>
+                        <TouchableOpacity style={styles.editProfileBtn} onPress={() => navigation.navigate('Edit Profile', { id: storedCredentials.id, successUpdateProfile: successUpdateProfile })}>
+                            <Text style={styles.editProfileTxt}>EDIT PROFILE</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.moreOptionsBtn} onPress={() => openMoreOptions()}>
+                            <Ionicons name='ios-ellipsis-vertical' size={18} color='white' />
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 <Image source={profilePicturePreview} style={styles.profilePicture} />
-                <View style={styles.profileBtnsContainer}>
-                    <TouchableOpacity style={styles.editProfileBtn} onPress={() => navigation.navigate('Edit Profile', { id: storedCredentials.id, successUpdateProfile: successUpdateProfile })}>
-                        <Text style={styles.editProfileTxt}>EDIT PROFILE</Text>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.moreOptionsBtn} onPress={() => openMoreOptions()}>
-                        <Ionicons name='ios-ellipsis-vertical' size={18} color='white' />
-                    </TouchableOpacity>
-                </View>
-            
+                <Text style={styles.name}>{userData && userData.fullName}</Text>
+                <Text style={styles.email}>{userData && userData.email}</Text>
+
                 <View style={styles.toggleBtnContainer}>
                     <TouchableOpacity style={toggleBtnActive === 'Adoptions' ? styles.toggleBtn : styles.toggleBtnInactive} onPress={() => setToggleBtnActive('Adoptions')}>
                         <Text style={toggleBtnActive === 'Adoptions' ? styles.toggleTxt : styles.toggleTxtInactive}>My Adoptions</Text>
@@ -238,7 +257,7 @@ const styles = StyleSheet.create({
 
     profileHeaderContainer: {
         width: '100%',
-        height: 210,
+        height: 190,
         backgroundColor: '#ffff88',
         position: 'relative',
         overflow: 'hidden',
@@ -269,26 +288,18 @@ const styles = StyleSheet.create({
         width: 130,
         borderRadius: 100,
         position: 'absolute',
-        top: 130,
+        top: 100,
         left: 20,
         borderColor: 'white',
         borderWidth: 7,
-    },
-
-    userName: {
-        fontFamily: 'PoppinsSemiBold',
-        fontSize: 18,
-        position: 'absolute',
-        bottom: 10,
-        left: 160,
     },
 
     profileBtnsContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 18,
-        marginLeft: 35,
+        marginTop: 95,
+        marginLeft: 50,
     },
 
     editProfileBtn: {
@@ -326,6 +337,18 @@ const styles = StyleSheet.create({
         paddingRight: 2,
         paddingBottom: 5,
         paddingLeft: 2,
+    },
+
+    name: {
+        fontFamily: 'PoppinsBold',
+        fontSize: 23,
+        marginTop: 50,
+        marginLeft: 30,
+    },
+
+    email: {
+        fontFamily: 'PoppinsRegular',
+        marginLeft: 30,
     },
 
     toggleBtnContainer: {
@@ -396,7 +419,7 @@ const styles = StyleSheet.create({
         paddingBottom: 18,
         paddingRight: 20,
         paddingLeft: 20,
-        // backgroundColor: 'aqua'
+        // backgroundColor: 'aqua',
     },
 
     adoptionListLeft: {

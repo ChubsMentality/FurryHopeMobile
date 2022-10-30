@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
-import { ActivityIndicator, Animated, FlatList, Image, ImageBackground, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Animated, Easing, FlatList, Image, ImageBackground, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { quickSort } from './SubComponents/QuickSort'
 import { CredentialsContext } from './CredentialsContext'
 import SuggestedCard from './SubComponents/SuggestedCard'
@@ -14,6 +14,8 @@ import avatar from '../assets/Images/avatar-vector.png'
 import heroLeftMost from '../assets/Home/heroLeftMost.png'
 import heroUpperRight from '../assets/Home/dogs-container.png'
 import heroLowerMostRight from '../assets/Home/cat-container.png'
+import dogPngIllus from '../assets/Home/dogPug.png'
+import catPngIllus from '../assets/Home/catIllus.png'
 
 const ViewAnimals = ({ navigation }) => {
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext)
@@ -37,6 +39,45 @@ const ViewAnimals = ({ navigation }) => {
     const [colorList, setColorList] = useState([])
     const [genderList, setGenderList] = useState([])
     const [sizeList, setSizeList] = useState([])
+
+    const hLeftMost = useRef(new Animated.Value(0)).current
+    const rUpperMost = useRef(new Animated.Value(0)).current
+    const rLowerMostLeft = useRef(new Animated.Value(0)).current
+    const rLowerMostRight = useRef(new Animated.Value(0)).current
+
+    const animateHeroSec = () => {
+        Animated.sequence([
+            Animated.parallel([
+                Animated.timing(hLeftMost, {
+                    toValue: 1,
+                    duration: 900,
+                    easing: Easing.in,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(rUpperMost, {
+                    toValue: 1,
+                    duration: 900,
+                    easing: Easing.in,
+                    delay: 200,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(rLowerMostLeft, {
+                    toValue: 1,
+                    duration: 900,
+                    easing: Easing.in,
+                    delay: 300,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(rLowerMostRight, {
+                    toValue: 1,
+                    duration: 900,
+                    easing: Easing.in,
+                    delay: 350,
+                    useNativeDriver: true,
+                }),
+            ]),
+        ]).start()
+    }
 
     const filterPreferences = async () => {
         let user = {}
@@ -152,6 +193,7 @@ const ViewAnimals = ({ navigation }) => {
     useEffect(() => {
         filterPreferences()
         getUser()
+        animateHeroSec()
     }, [])
 
     // useEffect(() => {
@@ -223,8 +265,7 @@ const ViewAnimals = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-
-
+ 
                 {/* <View style={{ position: 'absolute', top: 320, left: 0, }}> 
                     <Text style={styles.heading}>Hello {fName}</Text>
                     <Text style={styles.subHeading}>Make a new friend today</Text>
@@ -232,37 +273,82 @@ const ViewAnimals = ({ navigation }) => {
 
                 <View style={styles.top_margin}></View>
 
-                <Text style={styles.screenHeading}>EXPLORE</Text>
-                <Text style={styles.screenSubHeading}>Find your new buddy</Text>
-
-                <View style={styles.heroSection}>
-                    <View style={styles.heroLeftMost}>
-                        <Image source={heroLeftMost} style={{ height: 200, width: 200, marginLeft: 30, }} />
-                    </View>
-
-                    <View style={styles.heroRight}>
-                        <View style={styles.heroUpperRight}>
-                            <Image source={heroUpperRight} style={{ height: 150, width: 160, marginTop: 40 }}/>
-                        </View>
-
-                        <View style={styles.heroLowerRight}>
-                            <Image source={avatar} style={styles.heroLowerMostLeft} />
-
-                            <View style={styles.heroLowerMostRight}>
-                                <Image source={heroLowerMostRight} style={{ height: 90, width: 100, marginTop: 15, marginLeft: 30 }} />
-                            </View>
-                        </View>
-                    </View>
-                </View>
-
                 {browseActive ?
                     <View>
-                        {/* <View style={styles.testimonyContainer}>
-                            <Image source={avatar} style={styles.avatar}/>
-                            <Text style={styles.testimonyHeader}>Save lives.</Text>
-                            <Text style={styles.testimonySub}>Adopt one today.</Text>
-                        </View> */}
+                        <Text style={styles.screenHeading}>EXPLORE</Text>
+                        <Text style={styles.screenSubHeading}>Find your new buddy</Text>
 
+                        <View style={styles.heroSection}>
+                            <Animated.View 
+                                style={[
+                                    styles.heroLeftMost, 
+                                    {
+                                        opacity: hLeftMost,
+                                        transform: [{
+                                            translateX: hLeftMost.interpolate({
+                                                inputRange: [0, 1],
+                                                outputRange: [-30, 0],
+                                            }),
+                                        }]
+                                    }
+                                ]}
+                            >
+                                {/* <Text style={styles.heroLeftMostTxt}>DOGS</Text> */}
+                                <Image source={heroLeftMost} style={{ height: 200, width: 200, marginLeft: 30, }} />
+                            </Animated.View>
+        
+                            <View style={styles.heroRight}>
+                                <Animated.View 
+                                    style={[
+                                        styles.heroUpperRight,
+                                        {
+                                            opacity: rUpperMost,
+                                            transform: [{
+                                                translateY: rUpperMost.interpolate({
+                                                    inputRange: [0, 1],
+                                                    outputRange: [-20, 0],
+                                                })
+                                            }],
+                                        },
+                                    ]}
+                                >
+                                    <Image source={heroUpperRight} style={{ height: 150, width: 160, marginTop: 40 }}/>
+                                </Animated.View>
+        
+                                <View style={styles.heroLowerRight}>
+                                    <Animated.View 
+                                        style={{
+                                            opacity: rLowerMostLeft,
+                                            transform: [{
+                                                translateY: rLowerMostLeft.interpolate({
+                                                    inputRange: [0, 1],
+                                                    outputRange: [25, 0],
+                                                })
+                                            }]
+                                        }}
+                                    >
+                                        <Image source={avatar} style={styles.heroLowerMostLeft} />
+                                    </Animated.View>
+        
+                                    <Animated.View 
+                                        style={[
+                                            styles.heroLowerMostRight,
+                                            {
+                                                opacity: rLowerMostRight,
+                                                transform: [{
+                                                    translateY: rLowerMostRight.interpolate({
+                                                        inputRange: [0, 1],
+                                                        outputRange: [30, 0],
+                                                    })
+                                                }]
+                                            }
+                                        ]}
+                                    >
+                                        <Image source={heroLowerMostRight} style={{ height: 90, width: 100, marginTop: 15, marginLeft: 30 }} />
+                                    </Animated.View>
+                                </View>
+                            </View>
+                        </View>
 
                         <Text style={styles.categoryHeading}>Choose among our different animals</Text>
                         <TouchableOpacity style={styles.animalCategoryContainer} onPress={() => navigation.navigate('Dogs')}>
@@ -456,6 +542,14 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center',
         zIndex: 5,
+        position: 'relative',
+    },
+
+    heroLeftMostTxt: {
+        color: 'white',
+        position: 'absolute',
+        top: 0,
+        left: 0,
     },
     
     heroRight: {

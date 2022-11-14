@@ -13,7 +13,7 @@ import prevStep from '../../assets/RegisterAnimal/prevStep.svg'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const RegisterAnimal = ({ navigation }) => {
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext)
     const [animalType, setAnimalType] = useState('Dog')
     const [registrationType, setRegistrationType] = useState('New')
@@ -117,7 +117,7 @@ const RegisterAnimal = ({ navigation }) => {
                 const proofOfAntiRabiesComplete = false
                 const photocopyCertOfAntiRabiesComplete = false
 
-                const { data } = await axios.post(`http://localhost:5000/api/users/registerAnimal`, {
+                const { data } = await axios.post(`${URL}api/users/registerAnimal`, {
                     animalType, registrationType, applicantImg, name, contactNo, lengthOfStay, address,
                     animalName, animalBreed, animalAge, animalColor, animalGender, tagNo, date, registrationStatus, email, adoptionReference, isFromAdoption,
                     regFeeComplete, certOfResidencyComplete, ownerPictureComplete, petPhotoComplete, proofOfAntiRabiesComplete,
@@ -146,7 +146,7 @@ const RegisterAnimal = ({ navigation }) => {
     }
 
     const getUser = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`) 
+        const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`) 
         setIsCitizen(data.isMarikinaCitizen)
     } 
 

@@ -15,7 +15,7 @@ const Profile = () => {
     const [userData, setUserData] = useState()
     const window = useWindowDimensions()
     const navigation = useNavigation()
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     console.log(storedCredentials.token)
 
     const [adoptions, setAdoptions] = useState()
@@ -30,7 +30,7 @@ const Profile = () => {
 
     const fetchUser = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+            const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
             setUserData(data)
             setProfilePicturePreview(data.profilePicture)
             console.log(data)
@@ -48,7 +48,7 @@ const Profile = () => {
 
     const myAdoptions = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/users/getSpecificAdoptions`, config)
+            const { data } = await axios.get(`${URL}api/users/getSpecificAdoptions`, config)
             setAdoptions(quickSort(data, 0, data.length - 1))
         } catch (error) {
             console.log(error)
@@ -57,7 +57,7 @@ const Profile = () => {
 
     const petRegistrations = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/users/getSpecificRegistrations`, config)
+            const { data } = await axios.get(`${URL}api/users/getSpecificRegistrations`, config)
             setRegistrations(quickSort(data, 0, data.length - 1))
         } catch (error) {
             console.log(error)

@@ -5,7 +5,7 @@ import backArrow from '../assets/Icons/backArrow.svg'
 import disabledSvg from '../assets/Icons/disabled-hint.svg'
 
 const ViewAnimalDataAdopted = ({ navigation, route }) => {
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     const [name, setName] = useState('');
     const [breed, setBreed] = useState('');
     const [description, setDescription] = useState('');
@@ -22,7 +22,7 @@ const ViewAnimalDataAdopted = ({ navigation, route }) => {
 
     const getDataById = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/animals/${animalId}`)
+            const { data } = await axios.get(`${URL}api/animals/${animalId}`)
             console.log(data)
             setName(data.name);
             setBreed(data.breed);

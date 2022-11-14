@@ -9,7 +9,7 @@ import AnimalList from './SubComponents/AnimalList'
 import moment from 'moment'
 
 const ListOfDogs = ({ navigation }) => {
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     const scrollRef = useRef(null)
     const window = useWindowDimensions()
     const [sortBy, setSortBy] = useState('')
@@ -44,7 +44,7 @@ const ListOfDogs = ({ navigation }) => {
     }
 
     const fetchDogs = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/animals/getDogs`)
+        const { data } = await axios.get(`${URL}api/animals/getDogs`)
         setDogs(data)
         setCurrentList(data.filter(filterAvail))
     }

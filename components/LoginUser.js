@@ -12,7 +12,7 @@ const LoginUser = ({ navigation }) => {
     const [loading, setLoading] = useState(false)
     const [emailFocused, setEmailFocused] = useState(false)
     const [passwordFocused, setPasswordFocused] = useState(false)
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     // Context
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
 
@@ -25,7 +25,7 @@ const LoginUser = ({ navigation }) => {
         } else {
             // async / await format
             try {
-                const { data } = await axios.post(`http://localhost:5000/api/users/loginUser`, {email, password})
+                const { data } = await axios.post(`${URL}api/users/loginUser`, {email, password})
                 console.log(data)
 
                 // Stores the user's credential inside async storage, and will automatically navigate to the home page

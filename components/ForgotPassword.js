@@ -8,7 +8,7 @@ import React, { useState, useRef } from 'react'
 const ForgotPassword = ({ navigation }) => {
     const [email, setEmail] = useState('')
     const [focused, setFocused] = useState(false)
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
 
     const submitHandler = async () => {
         if (!email) {
@@ -16,7 +16,7 @@ const ForgotPassword = ({ navigation }) => {
         }
 
         try {
-            const { data } = await axios.post(`http://localhost:5000/api/users/sendResetPassword`, { email })
+            const { data } = await axios.post(`${URL}api/users/sendResetPassword`, { email })
             console.log(data)
             alert('Check your email for the link.')
         } catch (error) {

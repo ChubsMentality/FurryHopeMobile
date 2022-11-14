@@ -12,7 +12,7 @@ import BottomNav from '../SubComponents/BottomNav'
 import TopNav from '../SubComponents/TopNav'
 
 const ReportAnimal = () => {
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     const navigation = useNavigation()
     const window = useWindowDimensions()
 
@@ -103,7 +103,7 @@ const ReportAnimal = () => {
     }
 
     const getUserById = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+        const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
         setIsCitizen(data.isMarikinaCitizen)
         setUserEmail(data.email)
     }
@@ -115,7 +115,7 @@ const ReportAnimal = () => {
             }
         }
 
-        const { data } = await axios.get(`http://localhost:5000/api/users/getReportsPerUser`, config)
+        const { data } = await axios.get(`${URL}api/users/getReportsPerUser`, config)
         setReports(data)
         console.log(data)
     }
@@ -135,7 +135,7 @@ const ReportAnimal = () => {
             alert('Please enter the necessary information')
         } else {
             try {
-                const { data } = await axios.post(`http://localhost:5000/api/users/report`, { date, location, description, image, userToken, userEmail }, config)
+                const { data } = await axios.post(`${URL}api/users/report`, { date, location, description, image, userToken, userEmail }, config)
                 alert('Thank you for notifying us.')
 
                 setLocation('')

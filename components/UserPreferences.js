@@ -11,7 +11,7 @@ import axios from 'axios'
 import prevIcon from '../assets/Icons/reg-previous-arrow.png'
 
 const UserPreferences = ({ navigation }) => {
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext)
     const [animals, setAnimals] = useState()
     const [cats, setCats] = useState()
@@ -60,7 +60,7 @@ const UserPreferences = ({ navigation }) => {
 
     const getAnimals = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/animals/getBoth`)
+            const { data } = await axios.get(`${URL}api/animals/getBoth`)
             setAnimals(data)
         } catch (error) {
             console.log(error)
@@ -69,7 +69,7 @@ const UserPreferences = ({ navigation }) => {
 
     const getDogs = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/animals/getDogs`)
+            const { data } = await axios.get(`${URL}api/animals/getDogs`)
             setDogs(data)
         } catch (error) {
             console.log(error)
@@ -78,7 +78,7 @@ const UserPreferences = ({ navigation }) => {
 
     const getCats = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/animals/getCats`)
+            const { data } = await axios.get(`${URL}api/animals/getCats`)
             setCats(data)
         } catch (error) {
             console.log(error)
@@ -210,7 +210,7 @@ const UserPreferences = ({ navigation }) => {
         // console.log(genderPreference)
         // console.log(sizePreference)
         try {
-            const { data } = await axios.put(`http://localhost:5000/api/users/updatePreference/${storedCredentials.id}`, { animalPreference, breedPreferences, colorPreferences, genderPreference, sizePreference })
+            const { data } = await axios.put(`${URL}api/users/updatePreference/${storedCredentials.id}`, { animalPreference, breedPreferences, colorPreferences, genderPreference, sizePreference })
             
             alert('Your preferences have been updated')
             setTimeout(() => {
@@ -629,7 +629,7 @@ export default UserPreferences
 
     // const fetchData = async () => {
     //     try {
-    //         const { data: responseData } = await axios.get('http://localhost:5000/api/animals')
+    //         const { data: responseData } = await axios.get('${URL}api/animals')
     //         console.log(responseData)
     //         setNotAdopted(responseData.filter(filterNotAdopted))
     //     } catch (error) {
@@ -640,7 +640,7 @@ export default UserPreferences
 
     // const fetchUserById = async () => {
     //     try {
-    //         const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+    //         const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
     //         console.log(data)
     //         setPreferences(data.animalPreferences)
     //     } catch (error) {
@@ -699,7 +699,7 @@ export default UserPreferences
 
     // const doneHandler = async () => {
     //     try {
-    //         const { data } = await axios.put(`http://localhost:5000/api/users/updatePreference/${storedCredentials.id}`, { animalPreferences, breedPreferences, colorPreferences, animalTypePreferences, animalGenderPreferences })
+    //         const { data } = await axios.put(`${URL}api/users/updatePreference/${storedCredentials.id}`, { animalPreferences, breedPreferences, colorPreferences, animalTypePreferences, animalGenderPreferences })
     //         console.log(data)
     //         setSuccess(true)
     //     } catch (error) {
@@ -768,7 +768,7 @@ export default UserPreferences
 
 //     const fetchData = async () => {
 //         try {
-//             const { data: responseData } = await axios.get('http://localhost:5000/api/animals')
+//             const { data: responseData } = await axios.get('${URL}api/animals')
 //             console.log(responseData)
 //             setNotAdopted(responseData.filter(filterNotAdopted))
 //         } catch (error) {
@@ -779,7 +779,7 @@ export default UserPreferences
 
 //     const fetchUserById = async () => {
 //         try {
-//             const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+//             const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
 //             console.log(data)
 //             setPreferences(data.animalPreferences)
 //         } catch (error) {
@@ -865,7 +865,7 @@ export default UserPreferences
 
 //     const doneHandler = async () => {
 //         try {
-//             const { data } = await axios.put(`http://localhost:5000/api/users/updatePreference/${storedCredentials.id}`, { animalPreferences, breedPreferences, colorPreferences, animalTypePreferences, animalGenderPreferences })
+//             const { data } = await axios.put(`${URL}api/users/updatePreference/${storedCredentials.id}`, { animalPreferences, breedPreferences, colorPreferences, animalTypePreferences, animalGenderPreferences })
 //             console.log(data)
 //             setSuccess(true)
 //         } catch (error) {

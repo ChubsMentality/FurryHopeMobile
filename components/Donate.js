@@ -13,7 +13,7 @@ import TopNav from './SubComponents/TopNav'
 import moment from 'moment'
 
 const Donate = () => {
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     const navigation = useNavigation() 
     const window = useWindowDimensions()
     const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext)
@@ -150,7 +150,7 @@ const Donate = () => {
 
             console.log(`${dateOfDonation}, ${time}, ${name}, ${email}, ${contactNo}, ${items}, ${profilePicture}`)
             try {
-                const { data } = await axios.post(`http://localhost:5000/api/users/submitDonation`, 
+                const { data } = await axios.post(`${URL}api/users/submitDonation`, 
                 { dateOfDonation, time, name, email, contactNo, items, profilePicture }, config)
 
                 console.log(data)
@@ -167,7 +167,7 @@ const Donate = () => {
 
     const getUser = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+            const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
             console.log(data.profilePicture)
             setName(data.fullName)
             setEmail(data.email)

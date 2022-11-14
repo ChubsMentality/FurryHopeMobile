@@ -4,9 +4,10 @@ import { CredentialsContext } from './CredentialsContext'
 import moment from 'moment'
 import axios from 'axios'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { useColorScheme } from 'react-native-web'
 
 const ViewAnimalData = ({ navigation, route }) => {
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext)
     const [id, setId] = useState('')
     const [name, setName] = useState('');
@@ -35,7 +36,7 @@ const ViewAnimalData = ({ navigation, route }) => {
 
     const getDataById = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/animals/${animalId}`)
+            const { data } = await axios.get(`${useColorScheme}api/animals/${animalId}`)
             console.log(data)
             setId(data._id)
             setName(data.name)
@@ -55,7 +56,7 @@ const ViewAnimalData = ({ navigation, route }) => {
     }
 
     const getUser = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+        const { data } = await axios.get(`${useColorScheme}api/users/getUserById/${storedCredentials.id}`)
         setUser(data)
         setLimit(data.limit)
         console.log(data.limit)

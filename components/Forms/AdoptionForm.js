@@ -12,7 +12,7 @@ const AdoptionForm = ({ route }) => {
     const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext)
     const d = new Date()
     const navigation = useNavigation()
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     const { animalId } = route.params
 
     const [name, setName] = useState('')
@@ -48,7 +48,7 @@ const AdoptionForm = ({ route }) => {
     const adoptionStatus = 'Pending'
 
     const getAnimalById = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/animals/${animalId}`)
+        const { data } = await axios.get(`${URL}api/animals/${animalId}`)
         setAnimalName(data.name)
         setAnimalBreed(data.breed)
         setAnimalType(data.type)
@@ -59,7 +59,7 @@ const AdoptionForm = ({ route }) => {
     }
 
     const getUserById = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+        const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
         setName(data.fullName)
         setApplicantName(data.fullName)
         setEmail(data.email)
@@ -70,28 +70,28 @@ const AdoptionForm = ({ route }) => {
         setTempLimit(data.limit)
     }
 
-    // const generateTagNo = () => {
-    //     let tagNo = ''
-    //     let secondHalf = ''
-    //     const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+    const generateTagNo = () => {
+        let tagNo = ''
+        let secondHalf = ''
+        const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
-    //     let rand1 = Math.round(Math.random() * letters.length)
-    //     let rand2 = Math.round(Math.random() * letters.length)
-    //     let rand3 = Math.round(Math.random() * letters.length)
+        let rand1 = Math.round(Math.random() * letters.length)
+        let rand2 = Math.round(Math.random() * letters.length)
+        let rand3 = Math.round(Math.random() * letters.length)
 
-    //     let firstLetter = letters[rand1]
-    //     let secondLetter = letters[rand2]
-    //     let thirdLetter = letters[rand3]
-    //     let firstHalf = `${firstLetter}${secondLetter}${thirdLetter}`
+        let firstLetter = letters[rand1]
+        let secondLetter = letters[rand2]
+        let thirdLetter = letters[rand3]
+        let firstHalf = `${firstLetter}${secondLetter}${thirdLetter}`
 
-    //     for (let i = 0; i <= 3; i++) {
-    //         const randomNum = Math.round(Math.random() * 9)
-    //         secondHalf += randomNum
-    //     }
+        for (let i = 0; i <= 3; i++) {
+            const randomNum = Math.round(Math.random() * 9)
+            secondHalf += randomNum
+        }
         
-    //     tagNo = `${firstHalf} ${secondHalf}`
-    //     setTagNo(tagNo)
-    // }
+        tagNo = `${firstHalf} ${secondHalf}`
+        setTagNo(tagNo)
+    }
 
     const pickDocument = async () => {
         let result = await DocumentPicker.getDocumentAsync({ type: '*/*', copyToCacheDirectory: true, base64: true})
@@ -176,7 +176,7 @@ const AdoptionForm = ({ route }) => {
                     const proofOfAntiRabiesComplete = false
                     const photocopyCertOfAntiRabiesComplete = false
 
-                    const { data } = await axios.post(`http://localhost:5000/api/users/registerAnimal`, {
+                    const { data } = await axios.post(`${URL}api/users/registerAnimal`, {
                         animalType, registrationType, applicantImg, name, contactNo, lengthOfStay, address,
                         animalName, animalBreed, animalAge, animalColor, animalGender, tagNo, date, registrationStatus, email, adoptionReference, isFromAdoption,
                         regFeeComplete, certOfResidencyComplete, ownerPictureComplete, petPhotoComplete, proofOfAntiRabiesComplete, photocopyCertOfAntiRabiesComplete,
@@ -192,7 +192,7 @@ const AdoptionForm = ({ route }) => {
                     let hasPaid = false
                     
     
-                    const data = await axios.post(`http://localhost:5000/api/users/submitAdoption`, {
+                    const data = await axios.post(`${URL}api/users/submitAdoption`, {
                         animalId, applicantName, email, contactNo, address, applicantImg, validId, animalName, animalBreed,
                         animalType, animalGender, animalColor, animalImg, adoptionStatus, tagNo, date, applicationStatus, hasBeenInterviewed, hasPaid, adoptionReference
                     }, config)
@@ -205,7 +205,7 @@ const AdoptionForm = ({ route }) => {
     
                 // Update adoption status - of the animal
                 try {                
-                    const { data } = await axios.put(`http://localhost:5000/api/admins/updateAdoptionStatus/${animalId}`, { adoptionStatus })
+                    const { data } = await axios.put(`${URL}api/admins/updateAdoptionStatus/${animalId}`, { adoptionStatus })
                     // console.log(data)
                 } catch (error) {
                     console.log(error)
@@ -213,7 +213,7 @@ const AdoptionForm = ({ route }) => {
 
                 // Update user's limitation for adopting
                 try {   
-                    const { data } = await axios.put(`http://localhost:5000/api/users/updateLimitation/${storedCredentials.id}`, { limit })
+                    const { data } = await axios.put(`${URL}api/users/updateLimitation/${storedCredentials.id}`, { limit })
                 } catch (error) {
                     console.log(Error)
                 }
@@ -231,7 +231,7 @@ const AdoptionForm = ({ route }) => {
                     let hasBeenInterviewed = false
                     let hasPaid = false
     
-                    const data = await axios.post(`http://localhost:5000/api/users/submitAdoption`, {
+                    const data = await axios.post(`${URL}api/users/submitAdoption`, {
                         animalId, applicantName, email, contactNo, address, applicantImg, validId, animalName, animalBreed,
                         animalType, animalGender, animalColor, animalImg, adoptionStatus, date, applicationStatus, hasBeenInterviewed, hasPaid, adoptionReference
                     }, config)
@@ -245,7 +245,7 @@ const AdoptionForm = ({ route }) => {
                 
                 // Update animal's adoption status
                 try {                
-                    const data = await axios.put(`http://localhost:5000/api/admins/updateAdoptionStatus/${animalId}`, { adoptionStatus })
+                    const data = await axios.put(`${URL}api/admins/updateAdoptionStatus/${animalId}`, { adoptionStatus })
                     // console.log(data)
                 } catch (error) {
                     console.log(error)
@@ -253,7 +253,7 @@ const AdoptionForm = ({ route }) => {
 
                 // Update user's limitation for adopting
                 try {   
-                    const { data } = await axios.put(`http://localhost:5000/api/users/updateLimitation/${storedCredentials.id}`, { limit })
+                    const { data } = await axios.put(`${URL}api/users/updateLimitation/${storedCredentials.id}`, { limit })
                 } catch (error) {
                     console.log(Error)
                 }

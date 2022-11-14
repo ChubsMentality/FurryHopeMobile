@@ -6,7 +6,7 @@ import verifyVector from '../assets/Verification/verify-vector.png'
 
 const VerificationScreen = ({ navigation, route }) => {
     const { email } = route.params
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     console.log(email)
 
     const [code1, setCode1] = useState('')
@@ -26,7 +26,7 @@ const VerificationScreen = ({ navigation, route }) => {
         Keyboard.dismiss()
 
         try {
-            const { data } = await axios.post(`http://localhost:5000/api/users/reVerifyUser`, { verificationCode, email })
+            const { data } = await axios.post(`${URL}api/users/reVerifyUser`, { verificationCode, email })
             console.log(data)
             alert('Your account has been validated, you will be logged in the application.')
             navigation.navigate('Login')

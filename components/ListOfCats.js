@@ -19,7 +19,7 @@ const ListOfDogs = ({ navigation }) => {
     const [contentOffSet, setContentOffset] = useState(0)
     const [toggleView, setToggleView] = useState(true)
     const CONTENT_THRESHOLD = 1500
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
 
     const filterSearch = (arr) => {
         return arr.breed === searchQuery
@@ -41,7 +41,7 @@ const ListOfDogs = ({ navigation }) => {
     }
 
     const fetchDogs = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/animals/getCats`)
+        const { data } = await axios.get(`${URL}api/animals/getCats`)
         setCurrentList(data.filter(filterAvail))
     }
   

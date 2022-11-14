@@ -19,7 +19,7 @@ import catPngIllus from '../assets/Home/catIllus.png'
 
 const ViewAnimals = ({ navigation }) => {
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext)
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     // console.log(storedCredentials)
     const [fName, setFName] = useState('')
     // const [currentTab, setCurrentTab] = useState('Browse')
@@ -83,7 +83,7 @@ const ViewAnimals = ({ navigation }) => {
         let user = {}
 
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+            const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
             user = data
         } catch (error) {
             console.log(error)
@@ -92,8 +92,8 @@ const ViewAnimals = ({ navigation }) => {
         if(user && user.animalPreference === 'Dog') {
             console.log('get dogs')
             try {
-                const { data:userData } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
-                const { data:animalData } = await axios.get(`http://localhost:5000/api/animals/getDogs`)
+                const { data:userData } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
+                const { data:animalData } = await axios.get(`${URL}api/animals/getDogs`)
                 setAnimalPreferences(userData.animalPreference)
                 setBreedPreference(userData.breedPreferences)
                 setColorPreferences(userData.colorPreferences)
@@ -106,8 +106,8 @@ const ViewAnimals = ({ navigation }) => {
         } else if(user && user.animalPreference === 'Cat') {
             console.log('get cats')
             try {
-                const { data:userData } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
-                const { data:animalData } = await axios.get(`http://localhost:5000/api/animals/getCats`)
+                const { data:userData } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
+                const { data:animalData } = await axios.get(`${URL}api/animals/getCats`)
                 setAnimalPreferences(userData.animalPreference)
                 setBreedPreference(userData.breedPreferences)
                 setColorPreferences(userData.colorPreferences)
@@ -120,8 +120,8 @@ const ViewAnimals = ({ navigation }) => {
         } else if(user && user.animalPreference === 'Both') {
             console.log('get both')
             try {
-                const { data:userData } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
-                const { data:animalData } = await axios.get(`http://localhost:5000/api/animals/getBoth`)
+                const { data:userData } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
+                const { data:animalData } = await axios.get(`${URL}api/animals/getBoth`)
                 setAnimalPreferences(userData.animalPreference)
                 setBreedPreference(userData.breedPreferences)
                 setColorPreferences(userData.colorPreferences)
@@ -181,7 +181,7 @@ const ViewAnimals = ({ navigation }) => {
 
     const getUser = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+            const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
             let split = data.fullName.split(' ')
             let firstName = split[0]
             setFName(firstName)

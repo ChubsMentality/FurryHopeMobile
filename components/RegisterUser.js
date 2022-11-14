@@ -11,7 +11,7 @@ import bothOption from '../assets/UserPreference/both-icon.png'
 
 const RegisterUser = ({ navigation }) => {
     const [loading, setLoading] = useState(false)
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
 
     // To register the user's info
     const register = async () => {
@@ -31,7 +31,7 @@ const RegisterUser = ({ navigation }) => {
         
         try {
             // async / await format 
-            const { data } = await axios.post(`http://localhost:5000/api/users`, { fullName, email, contactNo, address, street, barangay, city, isMarikinaCitizen, password, animalPreference, breedPreferences, colorPreferences, genderPreference, sizePreference }) 
+            const { data } = await axios.post(`${URL}api/users`, { fullName, email, contactNo, address, street, barangay, city, isMarikinaCitizen, password, animalPreference, breedPreferences, colorPreferences, genderPreference, sizePreference }) 
             console.log(data)
             setLoading(false)
             navigation.dispatch(StackActions.replace('Verification', { User: data })) 
@@ -189,7 +189,7 @@ const RegisterUser = ({ navigation }) => {
 
     const getAnimals = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/animals`)
+            const { data } = await axios.get(`${URL}api/animals`)
             setNotAdopted(data.filter(filterNotAdopted))
         } catch (error) {
             console.log(error)
@@ -198,7 +198,7 @@ const RegisterUser = ({ navigation }) => {
 
     const getDogs = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/animals/getDogs`)
+            const { data } = await axios.get(`${URL}api/animals/getDogs`)
             setNotAdoptedDogs(data)
         } catch (error) {
             console.log(error)
@@ -207,7 +207,7 @@ const RegisterUser = ({ navigation }) => {
 
     const getCats = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/animals/getCats`)
+            const { data } = await axios.get(`${URL}api/animals/getCats`)
             setNotAdoptedCats(data)
         } catch (error) {
             console.log(error)

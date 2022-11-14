@@ -161,11 +161,11 @@ const styles = StyleSheet.create({
 
     txtHead: {
         fontFamily: 'PoppinsBold',
-        fontSize: 53,
+        fontSize: 48,
         textAlign: 'center',
         // opacity: .55,
         color: 'white',
-        zIndex: 5
+        zIndex: 5,
     },
 
     txtSubHead: {

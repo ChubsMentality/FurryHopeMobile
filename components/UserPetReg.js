@@ -28,10 +28,11 @@ const UserPetReg = ({ navigation, route }) => {
     const [registrationStatus, setRegistrationStatus] = useState()
     const [registrationType, setRegistrationType] = useState()
     const [tagNo, setTagNo] = useState()
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
 
     const getRegistration = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/admins/getRegistration/${route.params.id}`)
+            const { data } = await axios.get(`${URL}api/admins/getRegistration/${route.params.id}`)
             console.log(data)
             setId(data._id)
             setName(data.name)

@@ -12,7 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const UserFeedback = () => {
     const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext)
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     const navigation = useNavigation()
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
@@ -37,7 +37,7 @@ const UserFeedback = () => {
             alert('Please fill out the necessary fields.')
         } else {
             try {
-                const { data } = await axios.post(`http://localhost:5000/api/users/submitFeedback`, { fullName, email, message, profilePicture, date, rating })
+                const { data } = await axios.post(`${URL}api/users/submitFeedback`, { fullName, email, message, profilePicture, date, rating })
                 console.log(data)
                 alert('Your feedback is much appreciated.')
             } catch (error) {
@@ -57,7 +57,7 @@ const UserFeedback = () => {
     }
 
     const getUserById = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+        const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
         console.log(data)
         setFullName(data.fullName)
         setEmail(data.email)

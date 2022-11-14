@@ -23,7 +23,7 @@ import reportIcon from '../assets/Home/report.svg'
 import axios from 'axios'
 
 const Home = ({ navigation }) => {
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext)
     const [animalPreferences, setAnimalPreferences] = useState([])
     const [animals, setAnimals] = useState()
@@ -41,8 +41,8 @@ const Home = ({ navigation }) => {
 
     const filterPreferences = async () => {
         try {
-            const { data:userData } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
-            const { data:animalData } = await axios.get(`http://localhost:5000/api/animals`)
+            const { data:userData } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
+            const { data:animalData } = await axios.get(`${URL}api/animals`)
 
             setAnimalPreferences(userData.animalPreferences)
             setAnimals(animalData)

@@ -19,10 +19,10 @@ const DrawerContainer = () => {
     const Drawer = createDrawerNavigator();
     const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext)
     const [profilePic, setProfilePic] = useState('')
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
 
     const getUser = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+        const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
     }
 
     useEffect(() => {

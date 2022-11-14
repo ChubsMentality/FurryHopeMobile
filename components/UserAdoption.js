@@ -43,10 +43,11 @@ const UserAdoption = ({ navigation, route }) => {
 
     const [userId, setUserId] = useState()
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext)
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
 
     const getAdoption = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/admins/adoptions/${route.params.id}`)
+            const { data } = await axios.get(`${URL}api/admins/adoptions/${route.params.id}`)
             setAnimalId(data.animalId)
             setAnimalName(data.animalName)
             setAnimalBreed(data.animalBreed)
@@ -74,7 +75,7 @@ const UserAdoption = ({ navigation, route }) => {
 
     const getInterviewSched = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/admins/getInterviewSched/${route.params.id}`)
+            const { data } = await axios.get(`${URL}api/admins/getInterviewSched/${route.params.id}`)
             setInterviewSched(data)
             console.log(data)
         } catch (error) {
@@ -83,14 +84,14 @@ const UserAdoption = ({ navigation, route }) => {
     }
 
     const getPickupMsg = async () => {
-        const { data } = await axios.post(`http://localhost:5000/api/admins/getPickupMsg`, { adoptionReference })
+        const { data } = await axios.post(`${URL}api/admins/getPickupMsg`, { adoptionReference })
         setPickupSched(data)
         console.log(data)
     }
 
     const getAnimalById = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/animals/${animalId}`)
+            const { data } = await axios.get(`${URL}api/animals/${animalId}`)
             console.log(data)
             setTagNo(data.tagNo)
         } catch (error) {
@@ -100,14 +101,14 @@ const UserAdoption = ({ navigation, route }) => {
     
     const cancelAdoption = async () => {
         try {
-            const { data } = await axios.put(`http://localhost:5000/api/users/removeRegFromAdoption`, { adoptionReference })
+            const { data } = await axios.put(`${URL}api/users/removeRegFromAdoption`, { adoptionReference })
             console.log(data)
         } catch (error) {
             console.log(error)            
         }
 
         try {
-            const { data } = await axios.post(`http://localhost:5000/api/users/cancelAdoption`, { adoptionId, animalId, userId })
+            const { data } = await axios.post(`${URL}api/users/cancelAdoption`, { adoptionId, animalId, userId })
             console.log(data)
         } catch (error) {
             console.log(error)
@@ -271,7 +272,7 @@ const UserAdoption = ({ navigation, route }) => {
                 {applicationStatus === 'Pending' ?
                     <>
                         <TouchableOpacity style={styles.cancelAdoptionBtn} onPress={() => cancelAdoption()}>
-                            <Text>Cancel Adoption</Text>
+                            <Text style={styles.cancelAdoptionTxt}>Cancel Adoption</Text>
                         </TouchableOpacity>
                     </>
                     :
@@ -528,5 +529,24 @@ const styles = StyleSheet.create({
     emptyPng: {
         height: 100,
         width: 100,
-    }
+    },
+
+    cancelAdoptionBtn: {
+        backgroundColor: '#ed5e68',
+        borderRadius: 5,
+        width: '85.5%',
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 15,
+        marginRight: 30,
+        marginBottom: 40,
+        marginLeft: 30,
+    },
+
+    cancelAdoptionTxt: {
+        color: 'white',
+        fontFamily: 'PoppinsBold',
+        fontSize: 16,
+    },
 })

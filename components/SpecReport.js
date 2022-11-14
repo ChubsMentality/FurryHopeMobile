@@ -10,10 +10,11 @@ const SpecReport = ({ route }) => {
     const [image, setImage] = useState()
     const [animalStatus, setAnimalStatus] = useState()
     const [status, setStatus] = useState()
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
 
     const getReport = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/admins/getReports/${route.params.id}`)
+            const { data } = await axios.get(`${URL}api/admins/getReports/${route.params.id}`)
             setId(data._id)
             setDate(data.date)
             setLocation(data.location)

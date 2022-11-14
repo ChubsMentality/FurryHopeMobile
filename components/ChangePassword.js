@@ -9,7 +9,7 @@ const ChangePassword = ({ navigation, route }) => {
     const [confirmPwd, setConfirmPwd] = useState('')
     const [pwdFocused, setPwdFocused] = useState(false)
     const [confirmPwdFocused, setConfirmPwdFocused] = useState(false)
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
 
     const changePassword = async () => {
         if (!password || !confirmPwd) {
@@ -29,7 +29,7 @@ const ChangePassword = ({ navigation, route }) => {
         } else {
             try {
                 setLoading(true)
-                const { data } = await axios.put(`http://localhost:5000/api/users/updatePassword/${id}`, { password })
+                const { data } = await axios.put(`${URL}api/users/updatePassword/${id}`, { password })
                 setLoading(false)
                 navigation.goBack()
             } catch (error) {

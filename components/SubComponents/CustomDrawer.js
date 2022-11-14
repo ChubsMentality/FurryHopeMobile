@@ -9,14 +9,16 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { useNavigation } from '@react-navigation/native'
 
 const CustomDrawer = (props) => {
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext)
     const [profilePicture, setProfilePicture] = useState('')
+    const [fullName, setFullName] = useState('')
     const navigation = useNavigation()
 
     const getUser = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${storedCredentials.id}`)
+        const { data } = await axios.get(`${URL}api/users/getUserById/${storedCredentials.id}`)
         setProfilePicture(data.profilePicture)
+        setFullName(data.fullName)
         console.log(data.profilePicture)
     }
 
@@ -32,7 +34,7 @@ const CustomDrawer = (props) => {
         <DrawerContentScrollView style={styles.drawerContainer} {...props}>
             <View style={styles.profilePicContainer}>
                 <Image style={styles.profilePic} source={profilePicture} />
-                <Text style={styles.profileFullName}>{storedCredentials.fullName}</Text>
+                <Text style={styles.profileFullName}>{fullName}</Text>
 
                 <View style={styles.profilePicVector}></View>
                 <View style={styles.profilePicVector2}></View>

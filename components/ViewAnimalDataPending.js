@@ -12,7 +12,7 @@ const ViewAnimalDataPending = ({ navigation, route }) => {
     const [gender, setGender] = useState('');
     const [animalType, setAnimalType] = useState('');
     const [adoptionStatus, setAdoptionStatus] = useState('');
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     const [animalImg, setAnimalImg] = useState('');
 
     const pendingAdoption = adoptionStatus === 'Pending'
@@ -22,7 +22,7 @@ const ViewAnimalDataPending = ({ navigation, route }) => {
 
     const getDataById = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/animals/${animalId}`)
+            const { data } = await axios.get(`${URL}api/animals/${animalId}`)
             console.log(data)
             setName(data.name);
             setBreed(data.breed);

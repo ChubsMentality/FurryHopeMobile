@@ -5,7 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import * as ImagePicker from 'expo-image-picker'
 
 const EditProfile = ({ navigation, route }) => {
-    const URL = 'https://furryhopebackend.herokuapp.com/'
+    const URL = 'https://fair-cyan-chimpanzee-yoke.cyclic.app/'
     const { id, successUpdateProfile, setSuccessUpdateProfile } = route.params
     const [loading, setLoading] = useState(false)
     const [fullName, setFullName] = useState('')
@@ -28,7 +28,7 @@ const EditProfile = ({ navigation, route }) => {
     const [cityFocused, setCityFocused] = useState(false)
 
     const getUser = async () => {
-        const { data } = await axios.get(`http://localhost:5000/api/users/getUserById/${id}`)
+        const { data } = await axios.get(`${URL}api/users/getUserById/${id}`)
         setFullName(data.fullName)
         setEmail(data.email)
         setContactNo(data.contactNo)
@@ -81,14 +81,14 @@ const EditProfile = ({ navigation, route }) => {
     const updateHandler = async () => {
         // console.log(isMarikinaCitizen)
         try {
-            const { data } = await axios.put(`http://localhost:5000/api/users/updateProfilePicture/${id}`, { profilePicture })
+            const { data } = await axios.put(`${URL}api/users/updateProfilePicture/${id}`, { profilePicture })
         } catch (error) {
            console.log(error) 
         }
 
         try {
             setLoading(true)
-            const { data } = await axios.put(`http://localhost:5000/api/users/updateUserProfile/${id}`, { fullName, email, contactNo, address, street, barangay, city, isMarikinaCitizen })
+            const { data } = await axios.put(`${URL}api/users/updateUserProfile/${id}`, { fullName, email, contactNo, address, street, barangay, city, isMarikinaCitizen })
             setLoading(false)
             navigation.navigate('My Profile')
             alert(`Your changes has been saved.`)
